@@ -1,0 +1,11 @@
+services:
+  Legal.api.webapi:
+    image: ${DOCKER_REGISTRY-}legal
+    build:
+      context: .
+      dockerfile: Api/Legal.Api.WebApi/Dockerfile
+  Legal.service.migration:
+    image: ${DOCKER_REGISTRY-}legalmigration
+    build:
+      context: .
+      dockerfile: OtherServices/MigrationService/Dockerfile

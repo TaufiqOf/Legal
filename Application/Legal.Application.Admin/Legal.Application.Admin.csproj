@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>a569edd8-c5e2-44a8-9a30-a80973d67598</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="14.0.0" />
+        <PackageReference Include="FFMpegCore" Version="5.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.StackExchangeRedis" Version="9.0.8" />
+        <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.8" />
+        <PackageReference Include="Microsoft.Net.Http.Headers" Version="9.0.8" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Service\Legal.Service.Infrastructure\Legal.Service.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\Service\Legal.Service.Repository\Legal.Service.Repository.csproj" />
+        <ProjectReference Include="..\..\Shared\Legal.Shared.SharedModel\Legal.Shared.SharedModel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="DataSeeder\public.user.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+      <Folder Include="QueryHandlers\" />
+      <Folder Include="Services\ApplicationServices\" />
+      <Folder Include="SqlModel\" />
+    </ItemGroup>
+
+</Project>

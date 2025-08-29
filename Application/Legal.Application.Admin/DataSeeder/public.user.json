@@ -1,0 +1,12 @@
+[
+  {
+    "id": "admin",
+    "username": "admin",
+    "name": "admin",
+    "password": "+yx+4EygssXuMBAUqST6K4Y54V/16vqOXKv4HD8ogVGLdrL6usZzBt3PWHfsKU17",
+    "is_enabled": true,
+    "is_system_admin": true,
+    "is_locked": false,
+    "is_deleted": false
+  }
+]

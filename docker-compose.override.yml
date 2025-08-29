@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: legal-postgres
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-legaldb}
+      - POSTGRES_USER=${POSTGRES_USER:-legaluser}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-legalpass}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - legal-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - legal-network
+
+  Legal.service.migration:
+    image: ${DOCKER_REGISTRY-}infrastreamplannerservicemigration
+    command: >
+      dotnet /app/MNEPlatfrom.MigrationService.dll
+      --data-db "${DB_CONNECTION_STRING}"
+      --context-number -1
+      --update-database y
+    depends_on:
+      - postgres
+    networks:
+      - legal-network
+  
+  Legal.api.webapi:
+    user: root
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=5020
+      - ConnectionStrings__Postgres=${DB_CONNECTION_STRING}
+    volumes:
+      - ${STORAGE_PATH}:/app/uploads:rw
+    ports:
+      - "${PORT}:5020"
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - legal-network
+ 
+networks:
+  legal-network:
+    name: legal-network
+
+volumes:
+  legal-postgres-data:

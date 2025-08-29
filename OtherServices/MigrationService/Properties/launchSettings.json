@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "MigrationService": {
+      "commandName": "Project",
+      "commandLineArgs": "--update-database"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
