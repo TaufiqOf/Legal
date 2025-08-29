@@ -5,7 +5,7 @@ using Legal.Service.Infrastructure.Interface;
 using Legal.Service.Infrastructure.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace Legal.Application.Admin.Services;
+namespace Legal.Application.Admin.Infrastructure;
 
 public class RegistrationService(
     IRepository<User, AdminDatabaseContext> repository,

@@ -9,11 +9,11 @@ namespace Legal.Application.Admin.CommandHandlers;
 
 public class LogInCommandHandler : ACommandHandler<LogInParameterModel, UserResponseModel>
 {
-    private readonly IRepository<User, AdminDatabaseContext> _repository;
+    private readonly IRepository<Service.Infrastructure.Model.User, AdminDatabaseContext> _repository;
 
     public LogInCommandHandler(
         ILogger<LogInCommandHandler> logger,
-        IRepository<User, AdminDatabaseContext> repository,
+        IRepository<Service.Infrastructure.Model.User, AdminDatabaseContext> repository,
         RequestHandler requestHandler) : base(logger, requestHandler)
     {
         _repository = repository;

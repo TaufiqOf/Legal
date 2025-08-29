@@ -1,6 +1,6 @@
 using Legal.Application.Admin.Dtos;
 
-namespace Legal.Application.Admin.Services;
+namespace Legal.Application.Admin.Infrastructure;
 
 public interface IRegistrationService
 {

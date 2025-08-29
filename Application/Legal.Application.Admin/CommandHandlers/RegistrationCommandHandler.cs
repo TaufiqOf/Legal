@@ -1,5 +1,5 @@
 using Legal.Application.Admin.Dtos;
-using Legal.Application.Admin.Services;
+using Legal.Application.Admin.Infrastructure;
 using Legal.Service.Infrastructure.Helper;
 using Legal.Service.Infrastructure.Model;
 using Legal.Shared.SharedModel.ParameterModel;

@@ -5,28 +5,29 @@ using Legal.Service.Infrastructure.Services;
 using Legal.Shared.SharedModel.ParameterModel;
 using Legal.Shared.SharedModel.ResponseModel.User;
 
-namespace Legal.Application.Admin.CommandHandlers.UserCommands;
+namespace Legal.Application.Admin.CommandHandlers.User;
 
 [TokenAuthorize]
-public class DeleteUserCommandHandler : ACommandHandler<GetParameterModel, UserResponseModel>
+public class EditUserCommandHandler : ACommandHandler<EditUserParameterModel, UserResponseModel>
 {
-    private readonly IRepository<User, AdminDatabaseContext> _repository;
+    private readonly IRepository<Service.Infrastructure.Model.User, AdminDatabaseContext> _repository;
 
-    public DeleteUserCommandHandler(
-        ILogger<DeleteUserCommandHandler> logger,
-        IRepository<User, AdminDatabaseContext> repository,
+    public EditUserCommandHandler(
+        ILogger<EditUserCommandHandler> logger,
+        IRepository<Service.Infrastructure.Model.User, AdminDatabaseContext> repository,
         RequestHandler requestHandler) : base(logger, requestHandler)
     {
         _repository = repository;
     }
 
-    public override async Task<UserResponseModel> Execute(GetParameterModel parameter,
+    public override async Task<UserResponseModel> Execute(EditUserParameterModel parameter,
         CancellationToken cancellationToken)
     {
         var user = await _repository.Get(parameter.Id, cancellationToken);
         NotFoundException.ThrowIfNull(user, "user not found");
 
-        await _repository.Delete(user);
+        user.Name = parameter.Name;
+        await _repository.Update(user);
         await _repository.Commit(cancellationToken);
 
         return MapperHelper.Map<UserResponseModel>(user);

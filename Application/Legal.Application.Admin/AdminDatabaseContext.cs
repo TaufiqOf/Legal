@@ -1,4 +1,5 @@
-﻿using Legal.Service.Infrastructure.Model;
+﻿using Legal.Application.Admin.Dtos;
+using Legal.Service.Infrastructure.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Contracts;
 using static Legal.Service.Helper.ApplicationHelper;
@@ -29,7 +30,7 @@ public class AdminDatabaseContext : ADatabaseContext
 
     public DbSet<User> Owners { get; set; } = null!;
     
-    public DbSet<Models.Contract> Contracts { get; set; } = null!;
+    public DbSet<ContractDto> Contracts { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

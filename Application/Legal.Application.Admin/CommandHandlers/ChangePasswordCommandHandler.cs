@@ -11,11 +11,11 @@ namespace Legal.Application.Admin.CommandHandlers;
 [TokenAuthorize]
 public class ChangePasswordCommandHandler : ACommandHandler<ResetPasswordParameterModel, EmptyResponseModel>
 {
-    private readonly IRepository<User, AdminDatabaseContext> _repository;
+    private readonly IRepository<Service.Infrastructure.Model.User, AdminDatabaseContext> _repository;
 
     public ChangePasswordCommandHandler(
         ILogger<ChangePasswordCommandHandler> logger,
-        IRepository<User, AdminDatabaseContext> repository,
+        IRepository<Service.Infrastructure.Model.User, AdminDatabaseContext> repository,
         RequestHandler requestHandler) : base(logger, requestHandler)
     {
         _repository = repository;
