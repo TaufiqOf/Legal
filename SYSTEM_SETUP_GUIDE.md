@@ -268,4 +268,9 @@ docker compose logs -f legal.website
 3. Verify environment variables & connection strings
 
 ---
+## License
+MIT License © Taufiq Abdur Rahman
+You may not use this codebase without permission. For Evolution purposes only.
+
+---
 (End of Guide)

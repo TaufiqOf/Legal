@@ -289,3 +289,8 @@ Add new handler in a module project; it is auto-registered and a dynamic endpoin
 - EF Core Docs
 - SignalR Docs
 - Swagger/OpenAPI Docs
+
+---
+## License
+MIT License © Taufiq Abdur Rahman
+You may not use this codebase without permission. For Evolution purposes only.

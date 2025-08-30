@@ -1,10 +1,10 @@
-# Legal Migration Service
+﻿# Legal Migration Service
 
 ## Overview
 
 The Migration Service is a console application designed to manage database migrations and schema updates for the Legal API System. This service provides a command-line interface for applying Entity Framework Core migrations across multiple database contexts and modules.
 
-## ?? Architecture
+## ⚙️ Architecture
 
 This migration service implements:
 - **Command Line Interface** - Parameter-driven migration execution
@@ -13,42 +13,42 @@ This migration service implements:
 - **Configuration Management** - Flexible connection string configuration
 - **Assembly Discovery** - Automatic context discovery
 
-## ?? Project Structure
+## 📁 Project Structure
 
 ```
 MigrationService/
-??? ContextFactories/           # Database context factory implementations
-??? Scripts/                   # SQL migration scripts (embedded resources)
-??? Program.cs                 # Main entry point and CLI logic
-??? Options.cs                 # Command line options model
-??? Configuration.cs           # Configuration management
-??? Migrator.cs               # Migration execution logic
-??? appsettings.json          # Default configuration settings
-??? Dockerfile                # Docker container configuration
-??? README.md                 # This file
+├── ContextFactories/           # Database context factory implementations
+├── Scripts/                    # SQL migration scripts (embedded resources)
+├── Program.cs                  # Main entry point and CLI logic
+├── Options.cs                  # Command line options model
+├── Configuration.cs            # Configuration management
+├── Migrator.cs                 # Migration execution logic
+├── appsettings.json            # Default configuration settings
+├── Dockerfile                  # Docker container configuration
+└── README.md                   # This file
 ```
 
-## ?? Features
+## ✨ Features
 
-### Command Line Interface
+### 🖥️ Command Line Interface
 - **Interactive Mode** - Prompt-based context selection
 - **Batch Mode** - Non-interactive execution with parameters
 - **Context Selection** - Choose specific contexts or all contexts
 - **Connection Override** - Runtime connection string override
 
-### Migration Management
+### 🔄 Migration Management
 - **Multiple Contexts** - Support for multiple database contexts
 - **Selective Migration** - Apply migrations to specific contexts
 - **Bulk Operations** - Apply migrations to all contexts at once
 - **Error Handling** - Comprehensive error reporting and rollback
 
-### Database Support
+### 🗄️ Database Support
 - **PostgreSQL** - Primary database support
 - **DbUp Integration** - SQL script-based migrations
 - **Connection Pooling** - Efficient database connections
 - **Distributed Locking** - Prevents concurrent migration conflicts
 
-## ?? Command Line Usage
+## 🛠️ Command Line Usage
 
 ### Basic Commands
 
@@ -98,7 +98,7 @@ MigrationService.exe --data-db "Host=localhost;Database=LegalData;Username=user;
 | `--update-database` | Auto-confirm migration (y/n) | `--update-database "y"` |
 | `--context-number` | Context selection (-1=all, number=specific) | `--context-number "1"` |
 
-## ?? Database Context Discovery
+## 🔍 Database Context Discovery
 
 ### Automatic Discovery
 The service automatically discovers database contexts by:
@@ -137,7 +137,7 @@ Applies migrations to contexts 1, 2, and 3.
 ```
 Applies migrations to contexts 1 through 4.
 
-## ?? Configuration
+## ⚙️ Configuration
 
 ### appsettings.json
 Default configuration file:
@@ -167,7 +167,7 @@ Configuration can be overridden with environment variables:
 - `ConnectionStrings__Postgres` - PostgreSQL connection string
 - `ConnectionStrings__Redis` - Redis connection string
 
-## ?? Migration Process
+## 🧪 Migration Process
 
 ### Step-by-Step Process
 
@@ -175,23 +175,19 @@ Configuration can be overridden with environment variables:
    - Load appsettings.json
    - Apply command line overrides
    - Validate connection strings
-
 2. **Context Discovery**
    - Scan referenced assemblies
    - Find ADatabaseContext implementations
    - Display available contexts
-
 3. **Context Selection**
    - Interactive prompt or CLI parameter
    - Validate selection
    - Prepare context list
-
 4. **Migration Execution**
    - Create context factory
    - Initialize migrator
    - Apply pending migrations
    - Report results
-
 5. **Completion**
    - Display success/failure status
    - Log migration details
@@ -224,7 +220,7 @@ foreach (var contextType in selectedContexts)
 }
 ```
 
-## ?? Docker Support
+## 🐳 Docker Support
 
 ### Dockerfile
 The service includes Docker support for containerized migrations:
@@ -261,7 +257,7 @@ docker run --rm -e "ConnectionStrings__Postgres=your-connection-string" \
   legal-migration-service --update-database "y" --context-number "-1"
 ```
 
-## ?? SQL Scripts
+## 📜 SQL Scripts
 
 ### Embedded Scripts
 SQL scripts are embedded as resources in the assembly:
@@ -274,13 +270,13 @@ SQL scripts are embedded as resources in the assembly:
 ### Script Organization
 ```
 Scripts/
-??? Admin/
-?   ??? V001__CreateUserTables.sql
-?   ??? V002__AddUserIndexes.sql
-?   ??? V003__SeedDefaultUsers.sql
-??? Common/
-    ??? V001__CreateAuditTables.sql
-    ??? V002__CreateLoggingTables.sql
+├── Admin/
+│   ├── V001__CreateUserTables.sql
+│   ├── V002__AddUserIndexes.sql
+│   └── V003__SeedDefaultUsers.sql
+└── Common/
+    ├── V001__CreateAuditTables.sql
+    └── V002__CreateLoggingTables.sql
 ```
 
 ### Script Naming Convention
@@ -288,7 +284,7 @@ Scripts/
 - **Description** - Clear description of changes
 - **SQL Extension** - .sql file extension
 
-## ?? Security Considerations
+## 🔐 Security Considerations
 
 ### Connection Strings
 - **User Secrets** - Store sensitive connection strings securely
@@ -300,7 +296,7 @@ Scripts/
 - **Test Environment** - Test migrations in staging environment
 - **Rollback Plan** - Have rollback strategy for failed migrations
 
-## ?? Testing Migrations
+## 🧪 Testing Migrations
 
 ### Local Testing
 ```bash
@@ -317,7 +313,7 @@ docker run --name test-postgres -e POSTGRES_PASSWORD=test -p 5432:5432 -d postgr
 MigrationService.exe --auth-db "Host=localhost;Database=postgres;Username=postgres;Password=test"
 ```
 
-## ?? Dependencies
+## 📦 Dependencies
 
 ### Core Dependencies
 - **CommandLineParser** (2.9.1) - Command line argument parsing
@@ -332,7 +328,7 @@ MigrationService.exe --auth-db "Host=localhost;Database=postgres;Username=postgr
 - **Legal.Service.Repository** - Data access layer
 - **Legal.Shared.SharedModel** - Shared models
 
-## ?? Deployment
+## 🚀 Deployment
 
 ### Production Deployment
 
@@ -341,12 +337,10 @@ MigrationService.exe --auth-db "Host=localhost;Database=postgres;Username=postgr
    dotnet build --configuration Release
    dotnet publish --configuration Release --output ./publish
    ```
-
 2. **Deploy Files**
    - Copy published files to target server
    - Ensure connection strings are configured
    - Test connectivity to database
-
 3. **Execute Migration**
    ```bash
    ./MigrationService --update-database "y" --context-number "-1"
@@ -366,7 +360,7 @@ MigrationService.exe --auth-db "Host=localhost;Database=postgres;Username=postgr
     ConnectionStrings__Postgres: $(DatabaseConnectionString)
 ```
 
-## ?? Troubleshooting
+## 🧯 Troubleshooting
 
 ### Common Issues
 
@@ -393,7 +387,7 @@ Solution: Ensure database user has appropriate permissions
 - **Connection Testing** - Test database connectivity separately
 - **Manual Verification** - Check migration history in database
 
-## ?? Future Enhancements
+## 🔮 Future Enhancements
 
 - **Migration Rollback** - Ability to rollback specific migrations
 - **Parallel Execution** - Multi-threaded migration processing
@@ -401,9 +395,14 @@ Solution: Ensure database user has appropriate permissions
 - **Migration Validation** - Pre-migration validation checks
 - **Notification System** - Email/Slack notifications for migration results
 
-## ?? References
+## 📚 References
 
 - [Entity Framework Core Migrations](https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/)
 - [DbUp Documentation](https://dbup.readthedocs.io/)
 - [CommandLineParser](https://github.com/commandlineparser/commandline)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+
+---
+## License
+MIT License © Taufiq Abdur Rahman
+You may not use this codebase without permission. For Evolution purposes only.

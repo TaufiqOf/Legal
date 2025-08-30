@@ -1,4 +1,4 @@
-# Legal System - Docker Deployment
+﻿# Legal System - Docker Deployment
 
 This document describes how to deploy the Legal System using Docker and Docker Compose.
 
@@ -381,5 +381,6 @@ For issues and questions:
 4. Check Docker and Docker Compose versions
 
 ## License
+MIT License © Taufiq Abdur Rahman
+You may not use this codebase without permission. For Evolution purposes only.
 
-[Your License Information]

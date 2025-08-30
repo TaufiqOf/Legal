@@ -3,6 +3,39 @@
 ## Overview
 The Legal API System is a modular monolithic .NET 9 web application built with Clean Architecture & DDD. It provides a foundation for legal document management and multi-domain business modules (current: Admin).
 
+## 🧬 Modular Monolithic Architecture (Key Traits)
+This codebase follows a Modular Monolith pattern: one deployable unit, multiple strongly isolated business modules.
+
+Core characteristics:
+- Explicit Module Enumeration: `ApplicationHelper.ModuleName` enum defines all module identities (e.g. ADMIN, future SHOP, CHAT) for routing, seeding, authorization scopes.
+- Vertical Slice Design: Each module owns its Commands, Queries, Parameter / Response models, validators, mappings, DbContext (current Admin). Cross-module chatter only through well-defined Shared contracts.
+- Dynamic Handler Discovery: At startup assemblies are scanned; classes inheriting generic base types (e.g. ACommandHandler<,>, AQueryHandler<,>) are auto-registered. No manual endpoint wiring.
+- Unified API Surface: Single WebApi host exposes per-module dynamic endpoints plus generic execution controllers. Module name is part of the URL path ensuring clarity and separation.
+- Per-Module Data Concerns: Each module can introduce its own EF Core DbContext + migrations. MigrationService can run all or selected contexts via CLI switches (range / list / all).
+- Shared Kernel Library: `Legal.Shared.SharedModel` supplies only cross-cutting primitives (DTOs, parameter models, validators) avoiding bidirectional dependencies between feature modules.
+- Encapsulated Infrastructure: Common infra (repositories, helpers, storage, directory utilities) lives under Service layer; modules consume via interfaces, enabling future extraction to microservices if needed.
+- Consistent Naming & Discovery: Naming conventions (e.g. *ParameterModel, *ResponseModel, *Handler) allow reflection-based registration & endpoint generation.
+- Feature Growth Path: New module can be added without altering existing module internals; only enum extension + DI scan + (optional) new migrations.
+- Single Deployment Unit: Operational simplicity (one process/image) while preserving logical boundaries.
+- Evolution Friendly: Clear seams enable later decomposition to services if scaling / independent deployment requirements emerge.
+
+### Adding a New Module (Example: SHOP)
+1. Extend Module Enum: Add `SHOP` to `ApplicationHelper.ModuleName`.
+2. Create Application Project (if separate) or folder structure mirroring Admin (Commands, Queries, Validators, DbContext, Migrations).
+3. Implement DbContext (e.g. `ShopDbContext`) and add EF configuration & migrations.
+4. Add Command / Query handlers inheriting base handler abstractions; include corresponding Parameter / Response models (or reuse Shared ones).
+5. Register Assembly: Ensure new project referenced by WebApi; existing reflection registration picks up handlers automatically.
+6. Seed Data (optional): Provide JSON seed file path in API `InitializationOptions` for module bootstrap.
+7. Run MigrationService: Include new context (auto-discovered) or pass specific `--context-number`.
+8. Call Endpoints: Use dynamic endpoints `/api/{module}/commands/{Name}` and `/api/{module}/queries/{Name}` where `{module}` = `shop` (case-insensitive mapping to enum).
+
+### Benefits Over Classic Monolith
+- Reduced Coupling: Module boundaries enforced via separate folders / projects + limited shared surface.
+- Faster Refactoring: Adding features confined to module vertical slice.
+- Performance: In-process communication (no network penalty) while still structured.
+- Operational Simplicity: Single build, single docker image, unified logging & tracing.
+- Gradual Service Extraction: Any module can later be extracted with minimal churn due to isolation & explicit contracts.
+
 ## ⚙️ Architecture
 Layers:
 - API (`Legal.Api.WebApi`) – HTTP endpoints, Swagger, auth pipeline
@@ -102,20 +135,15 @@ Steps:
 8. Logs: Use View > Other Windows > Containers window in VS or run `docker compose logs -f` externally.
 9. Hot Reload: .NET Hot Reload applies to the API when using Fast (mounted) mode; for Angular use its dev server outside Docker during active UI work.
 
-If docker-compose is not automatically added:
-- Right-click solution > Add > Container Orchestrator Support > Docker Compose.
-- Add existing Api & Website projects to docker-compose.yml services.
-
 ## 🧩 Modules
 Current:
-- Admin: Users, auth, roles, system management
+- Admin: Users, Auth, Contract
+
 Planned:
-- Shop: Catalog, products, pricing
-- Chat: Realtime messaging, presence
+- Shop, Chat (scaffold-ready via enum expansion and handler assembly)
 
 ## 🔒 Security
 - JWT bearer tokens
-- Role-based policy authorization
 - CORS configured via AllowedOrigins
 - FluentValidation input enforcement
 
@@ -189,9 +217,8 @@ Planned additions:
 - Minimal API contract tests via Microsoft.AspNetCore.Mvc.Testing
 
 ## 📝 License
-Specify a license (e.g., MIT). Example:
 MIT License © Taufiq Abdur Rahman
-You may not use this codebase without permission.
+You may not use this codebase without permission. For Evolution purposes only.
 
 ## 💬 Support
 Open an issue with reproduction steps & environment details.

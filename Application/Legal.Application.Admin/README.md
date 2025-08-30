@@ -178,3 +178,9 @@ dotnet ef database update --project Application/Legal.Application.Admin --startu
 - EF Core Docs
 - AutoMapper Docs
 - Clean Architecture / CQRS guidance
+
+
+---
+## License
+MIT License © Taufiq Abdur Rahman
+You may not use this codebase without permission. For Evolution purposes only.
