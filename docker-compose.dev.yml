@@ -1,0 +1,28 @@
+services:
+  Legal.website:
+    build:
+      target: build
+    volumes:
+      - ./Website/Legal.Website/src:/app/src:ro
+      - ./Website/Legal.Website/public:/app/public:ro
+    command: npm run start
+    ports:
+      - "62572:62572"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - legal-network
+
+  Legal.api.webapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:4020
+    volumes:
+      - ./Api/Legal.Api.WebApi:/app/source:ro
+    networks:
+      - legal-network
+
+networks:
+  legal-network:
+    name: legal-network

@@ -15,11 +15,14 @@
     <None Remove="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".env.template" />
+    <None Include="docker-compose.dev.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="DOCKER_DEPLOYMENT.md" />
     <None Include="README.md" />
     <None Include="SYSTEM_SETUP_GUIDE.md" />
   </ItemGroup>

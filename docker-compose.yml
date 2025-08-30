@@ -9,3 +9,8 @@ services:
     build:
       context: .
       dockerfile: OtherServices/MigrationService/Dockerfile
+  Legal.website:
+    image: ${DOCKER_REGISTRY-}legal-website
+    build:
+      context: .
+      dockerfile: Website/Legal.Website/Dockerfile

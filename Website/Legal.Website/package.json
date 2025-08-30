@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve --host=127.0.0.1",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
+    "build:docker": "NODE_OPTIONS=--max_old_space_size=1024 ng build --configuration production --verbose",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

@@ -23,7 +23,7 @@ public class DeleteContractCommandHandler : ACommandHandler<IdParameterModel, Em
 
     public override async Task<EmptyResponseModel> Execute([NotNull] IdParameterModel parameter, CancellationToken cancellationToken)
     {
-        var result = await ContractService.Delete(MapperHelper.Map<ContractDto>(parameter), cancellationToken);
+        var result = await ContractService.Delete(parameter.Id, cancellationToken);
         return new EmptyResponseModel();
     }
 }

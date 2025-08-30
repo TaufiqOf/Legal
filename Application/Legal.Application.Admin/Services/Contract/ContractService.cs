@@ -19,9 +19,16 @@ public class ContractService : IContractService
 
     public IDomainRepository<Models.Contract, AdminDatabaseContext> Repository { get; }
 
-    public async Task<bool> Delete(ContractDto contract, CancellationToken cancellationToken)
+    public async Task<bool> Delete(string id, CancellationToken cancellationToken)
     {
-        await Repository.Delete(Mapper.Map<Models.Contract>(contract), true, cancellationToken);
+        var existingContract = await Repository.Get(id, cancellationToken);
+        if(existingContract == null)
+        {
+            throw new KeyNotFoundException("Contract not found");
+        }
+
+        await Repository.Delete(existingContract, true, cancellationToken);
+        await Repository.Commit();
         return true;
     }
 
@@ -53,8 +60,6 @@ public class ContractService : IContractService
         {
             contractModel = Mapper.Map(contract, existingContract);
             await Repository.Update(contractModel);
-            await Repository.Commit(cancellationToken);
-            return Mapper.Map<ContractDto>(contractModel);
         }
         else
         {
