@@ -40,7 +40,6 @@
 
     <ItemGroup>
       <Folder Include="Migrations\" />
-      <Folder Include="Services\ApplicationServices\" />
       <Folder Include="SqlModel\" />
     </ItemGroup>
 

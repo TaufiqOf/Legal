@@ -1,16 +1,26 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { App } from './app';
+import { AuthService } from './services/auth.service';
 
 describe('App', () => {
+  const authMock = {
+    isAuthenticated: () => true,
+    getCurrentUser: () => ({ name: 'Test User' }),
+    logout: () => { }
+  } as Partial<AuthService> as AuthService;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterModule.forRoot([])
+        RouterTestingModule,
+        HttpClientTestingModule
       ],
-      declarations: [
-        App
-      ],
+      declarations: [App],
+      providers: [
+        { provide: AuthService, useValue: authMock }
+      ]
     }).compileComponents();
   });
 
@@ -20,10 +30,11 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it('should render navbar brand when authenticated', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, Legal.Website');
+    const brand = compiled.querySelector('.navbar-brand');
+    expect(brand?.textContent).toContain('Legal System');
   });
 });

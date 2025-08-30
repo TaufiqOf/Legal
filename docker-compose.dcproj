@@ -25,5 +25,7 @@
     <None Include="DOCKER_DEPLOYMENT.md" />
     <None Include="README.md" />
     <None Include="SYSTEM_SETUP_GUIDE.md" />
+    <None Include="Tests\Legal.Application.Admin.Tests\Legal.Application.Admin.Tests.csproj" />
+    <None Include="Tests\Legal.Application.Admin.Tests\Services\RegistrationServiceTests.cs" />
   </ItemGroup>
 </Project>

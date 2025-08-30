@@ -210,16 +210,72 @@ docker compose up -d --build
 Adjust env vars in compose file as needed. For Visual Studio workflow see earlier section.
 
 ## 🧪 Testing
-Planned additions:
-- xUnit test projects per layer
-- Testcontainers for PostgreSQL integration tests
+Current test coverage focuses on the Admin Application layer.
+
+Project:
+- Tests/Legal.Application.Admin.Tests (xUnit, FluentAssertions, Moq, EFCore.InMemory, Coverlet)
+
+Run all tests:
+```bash
+dotnet test
+```
+
+Collect code coverage (lcov for report tools like ReportGenerator or Sonar):
+```bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:CoverletOutputFormat=lcov
+```
+
+Naming convention:
+`MethodUnderTest_Scenario_ExpectedResult`
+
+Examples (see source):
+- RegistrationServiceTests.RegisterUserAsync_NewUser_PersistsAndReturnsDto
+- RegistrationServiceTests.RegisterUserAsync_UserAlreadyExists_Throws
+- ContractServiceTests.Get_ReturnsMappedDto_WhenFound
+
+Testing patterns employed:
+- Arrange/Act/Assert with clear separation
+- Moq strict mocks to ensure only expected repository calls are made
 - FluentAssertions for expressive assertions
-- Minimal API contract tests via Microsoft.AspNetCore.Mvc.Testing
+- AutoMapper configured ad‑hoc per test class to keep mapper surface minimal
+- Password hashing verified using helper (no direct implementation coupling)
+
+Writing a new service/handler test:
+1. Configure minimal AutoMapper profile(s) for DTO <-> Entity
+2. Mock repository (IRepository / IDomainRepository) methods used by the handler/service
+3. Instantiate target service/handler directly (no full DI container required)
+4. Execute method under test with CancellationToken.None (or a token you can cancel for cancellation tests)
+5. Assert returned DTO shape & side effects (Verify mocks, verify password hashing, etc.)
+6. (Optional) Add negative path tests (validation failure, existing entity, not found, etc.)
+
+Mapping validation (optional guard test):
+```csharp
+var config = new MapperConfiguration(cfg => cfg.AddProfile<MyProfile>());
+config.AssertConfigurationIsValid();
+```
+
+Using EFCore.InMemory (for behaviour that depends on LINQ translation):
+- Prefer to still mock repository unless you explicitly need query translation semantics.
+- If used, seed context, execute, assert results.
+
+Planned future test additions:
+- Testcontainers PostgreSQL integration tests (real migrations + data seeding)
+- Minimal API endpoint contract tests (Microsoft.AspNetCore.Mvc.Testing)
+- Authentication / authorization pipeline tests
+- Performance benchmarks for heavy queries
+
+Quick watch mode (reruns on change) using dotnet-watch:
+```bash
+dotnet watch --project Tests/Legal.Application.Admin.Tests test
+```
 
 ## ⚠️ Disclaimer
 - Backend architecture was originally designed and written by the author for a personal project and reused here (no AI assistance for backend implementation).
 - All documentation content was generated with GitHub Copilot and reviewed/edited by the author.
 - Frontend boilerplate was generated using GitHub Copilot and then manually updated/refined.
+- Used AI to
+	- fixed Issue for dockization 
+	- frontend unit tests
 
 ## 📝 License
 MIT License © Taufiq Abdur Rahman

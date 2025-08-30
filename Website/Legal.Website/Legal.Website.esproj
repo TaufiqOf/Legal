@@ -10,5 +10,7 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <!-- New: Command Visual Studio will use when executing Tests for this JS project -->
+    <TestCommand>npm run test:ci</TestCommand>
   </PropertyGroup>
 </Project>

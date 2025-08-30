@@ -3,7 +3,6 @@ using Legal.Application.Admin.Dtos;
 using Legal.Service.Infrastructure.Helper;
 using Legal.Service.Infrastructure.Interface;
 using Legal.Service.Infrastructure.Model;
-using Microsoft.EntityFrameworkCore;
 
 namespace Legal.Application.Admin.Infrastructure;
 
@@ -16,10 +15,11 @@ public class RegistrationService(
     {
         ArgumentNullException.ThrowIfNull(userDto);
 
-        var user = await repository.GetQueryable()
-            .AsNoTracking()
-            .Where(u => u.Id == userDto.Id).FirstOrDefaultAsync(cancellationToken);
-        if (user != null) throw new Exception($"User {userDto.Id} already exists");
+        var existing = await repository.Get(userDto.Id, cancellationToken);
+        if (existing != null)
+        {
+            throw new Exception($"User {userDto.Id} already exists");
+        }
 
         var hashedPassword = PasswordHasher.HashPassword(userDto.Password);
         var userToAdd = new User
@@ -30,10 +30,9 @@ public class RegistrationService(
             Password = hashedPassword
         };
 
-        mapper.Map(userToAdd, userDto);
         await repository.Add(userToAdd, cancellationToken);
         await repository.Commit(cancellationToken);
 
-        return userDto;
+        return mapper.Map<UserDto>(userToAdd);
     }
 }
