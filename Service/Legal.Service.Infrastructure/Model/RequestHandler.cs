@@ -27,6 +27,10 @@ public class RequestHandler(IServiceProvider serviceProvider)
         }
     }
 
+    // Added: expose registered handlers for swagger/documentation generation
+    public static IReadOnlyDictionary<ModuleName, IReadOnlyList<Type>> GetRegisteredHandlers()
+        => _requestHandlers.ToDictionary(k => k.Key, v => (IReadOnlyList<Type>)v.Value.AsReadOnly());
+
     public static async Task<List<string>> ListCommands(string moduleName)
     {
         var type = typeof(ACommandHandler<,>);

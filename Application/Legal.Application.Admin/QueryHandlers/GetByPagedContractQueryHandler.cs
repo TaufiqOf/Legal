@@ -1,10 +1,13 @@
 ﻿using Legal.Application.Admin.Infrastructure;
 using Legal.Service.Infrastructure.Model;
+using Legal.Service.Infrastructure.Services;
 using Legal.Shared.SharedModel.ParameterModel;
 using Legal.Shared.SharedModel.ResponseModel;
 using Legal.Shared.SharedModel.ResponseModel.Contract;
 
 namespace Legal.Application.Admin.QueryHandlers;
+
+[TokenAuthorize]
 public class GetByPagedContractQueryHandler : AQueryHandler<GetItemsParameterModel, PagedResponseModel<ContractResponseModel>>
 {
     public GetByPagedContractQueryHandler(

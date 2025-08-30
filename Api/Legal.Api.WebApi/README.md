@@ -1,51 +1,57 @@
-# Legal.Api.WebApi
+﻿# Legal.Api.WebApi
 
 ## Overview
 
 The main Web API project that serves as the entry point for the Legal API System. This ASP.NET Core Web API provides RESTful endpoints for command execution, query processing, and file operations across multiple business modules.
 
-## ??? Architecture
+## 🏗️ Architecture
 
-This API follows the mediator pattern with a centralized request handler that routes commands and queries to appropriate handlers based on module names.
+This API follows a CQRS style with dynamic handler discovery. Handlers (command & query) are registered per module and can be executed in three ways:
+
+1. Aggregated generic endpoints (CommandController / QueryController) that accept a RequestName + Parameter payload.
+2. Public (anonymous) execution endpoints for explicitly allowed handlers.
 
 ### Key Components
 
-- **Controllers** - API endpoint controllers
-- **Program.cs** - Application startup and configuration
+- **Controllers** - Conventional API endpoint controllers
+- **Program.cs** - Application startup and configuration (maps dynamic endpoints)
 - **Data Seeding** - Initial data population
 - **Delegate Handlers** - Request/response pipeline handlers
 
-## ?? Project Structure
+## 📂 Project Structure
 
 ```
 Legal.Api.WebApi/
-??? Controllers/
-?   ??? CommandController.cs       # Command execution endpoints
-?   ??? QueryController.cs         # Query execution endpoints
-?   ??? PublicController.cs        # Public access endpoints
-??? DataSeeding/
-?   ??? DataSeederService.cs       # Background data seeding service
-?   ??? InitializationOptions.cs   # Seeding configuration
-??? DelegateHandler/
-?   ??? TokenDelegateHandler.cs    # JWT token handling
-??? Properties/
-?   ??? launchSettings.json        # Development launch settings
-??? Program.cs                     # Application entry point
-??? README.md                      # This file
+├── Controllers/
+│   ├── CommandController.cs        # Generic command execution endpoints
+│   ├── QueryController.cs          # Generic query execution endpoints
+│   └── PublicController.cs         # Anonymous/public endpoints
+├── DynamicHandlerEndpoints.cs      # Creates per-handler endpoints
+├── DataSeeding/
+│   ├── DataSeederService.cs        # Background data seeding service
+│   └── InitializationOptions.cs    # Seeding configuration
+├── DelegateHandler/
+│   └── TokenDelegateHandler.cs     # JWT token handling
+├── Properties/
+│   └── launchSettings.json         # Development launch settings
+├── Program.cs                      # Application entry point
+└── README.md                       # This file
 ```
 
-## ?? Features
+## ✨ Features
 
 ### Command Processing
 - Execute business commands with validation
 - File upload support with multipart form data
 - Command discovery and documentation
+- Dynamic per-command endpoints
 - Error handling and logging
 
 ### Query Processing
 - Execute read operations and data retrieval
 - File download capabilities
 - Query discovery and documentation
+- Dynamic per-query endpoints
 - Flexible result handling
 
 ### Security
@@ -59,20 +65,45 @@ Legal.Api.WebApi/
 - Redis backplane support
 - MessagePack protocol support
 
-## ?? API Endpoints
+## 🔌 API Endpoints
 
-### Command Controller (`/api/Command`)
+### 1. Dynamic Per-Handler Endpoints (Minimal APIs)
+Automatically generated for each registered handler using the pattern:
+
+```
+POST /api/{module}/commands/{CommandName}
+POST /api/{module}/queries/{QueryName}
+```
+
+Example (ADMIN module):
+```http
+POST /api/admin/commands/SaveContract
+Content-Type: application/json
+
+{
+  "Title": "Agreement A",
+  "EffectiveDate": "2025-09-01T00:00:00Z"
+}
+```
+```http
+POST /api/admin/queries/GetContract
+Content-Type: application/json
+
+{
+  "Id": "b0a4c9d2-3b6c-4d2f-b6e3-9c2a7f1e1c11"
+}
+```
+Payloads map directly to the handler parameter model (no wrapper object required). Internally the API wraps this into the generic execution contract.
+
+### 2. Generic Command Controller (`/api/Command`)
 
 #### Execute Command
 ```http
 POST /api/Command/Execute/{moduleName}
 Content-Type: application/json
-
 {
   "RequestName": "CommandName",
-  "Parameter": {
-    // Command-specific parameters
-  }
+  "Parameter": { /* command params */ }
 }
 ```
 
@@ -95,18 +126,15 @@ GET /api/Command/ListAll/{moduleName}
 GET /api/Command/Detail/{moduleName}/{commandName}
 ```
 
-### Query Controller (`/api/Query`)
+### 3. Generic Query Controller (`/api/Query`)
 
 #### Execute Query
 ```http
 POST /api/Query/Execute/{moduleName}
 Content-Type: application/json
-
 {
   "RequestName": "QueryName",
-  "Parameter": {
-    // Query-specific parameters
-  }
+  "Parameter": { /* query params */ }
 }
 ```
 
@@ -114,12 +142,9 @@ Content-Type: application/json
 ```http
 POST /api/Query/download/{moduleName}
 Content-Type: application/json
-
 {
   "RequestName": "DownloadQuery",
-  "Parameter": {
-    // Download parameters
-  }
+  "Parameter": { /* download params */ }
 }
 ```
 
@@ -138,22 +163,31 @@ GET /api/Query/ListAll/{moduleName}
 GET /api/Query/Detail/{moduleName}/{queryName}
 ```
 
-## ?? Configuration
+### 4. Public (Anonymous) Endpoints (`/api/public`)
+Used for handlers explicitly marked `[AllowAnonymous]`.
+
+```http
+POST /api/public/execute/{moduleName}
+```
+
+### Selecting Execution Style
+| Scenario | Recommended Endpoint Type |
+|----------|---------------------------|
+| Simple client wants strongly typed REST style | Dynamic per-handler endpoint |
+| Needs reflection / discovery | Generic ListAll + Detail endpoints |
+| Mixed file upload + command | `/api/Command/Upload/{module}` |
+| Anonymous access | `/api/public/execute/{module}` |
+
+## ⚙️ Configuration
 
 ### Application Settings
 
 ```json
 {
-  "ConnectionStrings": {
-    "Postgres": "connection-string"
-  },
+  "ConnectionStrings": { "Postgres": "connection-string" },
   "AllowedOrigins": ["http://localhost:3000"],
   "MaxRequestBodySize": "100000000",
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information"
-    }
-  }
+  "Logging": { "LogLevel": { "Default": "Information" } }
 }
 ```
 
@@ -169,181 +203,89 @@ Sensitive configuration is stored in User Secrets:
 - `ASPNETCORE_ENVIRONMENT` - Development/Production
 - `ASPNETCORE_URLS` - Listening URLs
 
-## ?? Dependencies
+## 📦 Dependencies
 
 ### NuGet Packages
 
-- **Microsoft.AspNetCore.Mvc.NewtonsoftJson** - JSON serialization
-- **Microsoft.AspNetCore.SignalR.*** - Real-time communication
-- **Microsoft.EntityFrameworkCore.Design** - EF Core design-time tools
-- **Swashbuckle.AspNetCore** - API documentation
-- **Microsoft.VisualStudio.Azure.Containers.Tools.Targets** - Docker support
+- Microsoft.AspNetCore.Mvc.NewtonsoftJson
+- Microsoft.AspNetCore.SignalR.*
+- Microsoft.EntityFrameworkCore.Design
+- Swashbuckle.AspNetCore
+- Microsoft.VisualStudio.Azure.Containers.Tools.Targets
 
 ### Project References
 
-- **Legal.Application.Admin** - Admin module business logic
-- **Legal.Service.Infrastructure** - Core infrastructure services
-- **Legal.Service.Repository** - Data access layer
-- **Legal.Shared.SharedModel** - Shared models and DTOs
+- Legal.Application.Admin
+- Legal.Service.Infrastructure
+- Legal.Service.Repository
+- Legal.Shared.SharedModel
 
-## ????? Running the Application
+## 🚀 Running the Application
 
 ### Development Mode
 
 ```bash
-# Using .NET CLI
 dotnet run
-
-# Using Visual Studio
-F5 or Ctrl+F5
 ```
 
 ### Production Mode
 
 ```bash
-# Build and run
 dotnet build --configuration Release
 dotnet run --configuration Release
+```
 
-# Using Docker
+### Docker
+```bash
 docker build -t legal-api .
 docker run -p 8080:8080 legal-api
 ```
 
-## ?? Swagger Documentation
+## 📘 Swagger Documentation
 
-When running in development mode, Swagger UI is available at:
-- `https://localhost:5001/swagger`
-- `http://localhost:5000/swagger`
+Development URLs:
+- https://localhost:5001/swagger
+- http://localhost:5000/swagger
 
-The Swagger documentation provides:
-- Interactive API testing
-- Request/response schemas
-- Authentication testing
-- Example requests
+Swagger includes:
+- Generic endpoints
+- Dynamic per-handler endpoints
+- Handler list injected via document filter
 
-## ?? Authentication
+## 🔐 Authentication
 
-### JWT Token Flow
-
-1. **Login** - Send credentials to authentication endpoint
-2. **Token** - Receive JWT token in response
-3. **Authorization** - Include token in Authorization header
-4. **Validation** - Token is validated on each request
-
-### Authorization Header
-
+Authorization header:
 ```http
 Authorization: Bearer <jwt-token>
 ```
 
-## ?? Logging
+## 🪵 Logging
+Structured logging (console + extensible sinks).
 
-The application uses structured logging with:
-- **Console** - Development logging
-- **File** - Production logging (when configured)
-- **Exception details** - Detailed error information
+## ❗ Error Handling
 
-### Log Levels
-
-- **Error** - Exception handling and critical errors
-- **Warning** - Non-critical issues
-- **Information** - General application flow
-- **Debug** - Detailed debugging information
-
-## ?? Error Handling
-
-### Response Format
-
+Typical error response:
 ```json
-{
-  "Success": false,
-  "Message": "Error description",
-  "Data": null,
-  "Errors": ["Detailed error messages"]
-}
+{ "Success": false, "Error": "Error description" }
 ```
 
-### HTTP Status Codes
+## 🌐 CORS Configuration
+Flexible policy with allow-list or permissive dev mode.
 
-- **200 OK** - Successful operation
-- **400 Bad Request** - Invalid request or validation errors
-- **401 Unauthorized** - Authentication required
-- **403 Forbidden** - Insufficient permissions
-- **404 Not Found** - Resource not found
-- **500 Internal Server Error** - Server errors
+## 🧩 Module System
+Modules (ADMIN, SHOP, CHAT) register their handlers. Each module gets its own endpoint namespace.
 
-## ?? CORS Configuration
+## 🧪 Testing
+Use Swagger UI or Postman. (Integration tests TBD.)
 
-The API supports flexible CORS configuration:
-- **Development** - Allow all origins with credentials
-- **Production** - Configured allowed origins only
-- **Headers** - Allow all headers
-- **Methods** - Allow all HTTP methods
+## 🚢 Deployment
+See Docker section above / compose file.
 
-## ?? Module System
+## 💻 Development
+Add new handler in a module project; it is auto-registered and a dynamic endpoint appears (no controller changes required).
 
-The API supports multiple business modules:
-- **ADMIN** - Administrative operations
-- **SHOP** - E-commerce operations (future)
-- **CHAT** - Communication operations (future)
-
-Each module has its own set of commands and queries that are dynamically discovered and routed.
-
-## ?? Testing
-
-### Manual Testing
-- Use Swagger UI for interactive testing
-- Test files available in project root
-- Postman collections (to be created)
-
-### Integration Testing
-(To be implemented)
-
-## ?? Deployment
-
-### Docker Deployment
-
-```bash
-# Build image
-docker build -t legal-api .
-
-# Run container
-docker run -d -p 8080:8080 --name legal-api-container legal-api
-```
-
-### Docker Compose
-
-```yaml
-version: '3.8'
-services:
-  api:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-```
-
-## ?? Development
-
-### Adding New Controllers
-
-1. Create controller class inheriting from `ControllerBase`
-2. Add appropriate route attributes
-3. Inject required services
-4. Implement endpoint methods
-
-### Adding New Modules
-
-1. Define module in `ApplicationHelper.ModuleName` enum
-2. Create module-specific handlers
-3. Register handlers in dependency injection
-4. Update API documentation
-
-## ?? References
-
-- [ASP.NET Core Documentation](https://docs.microsoft.com/en-us/aspnet/core/)
-- [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
-- [SignalR Documentation](https://docs.microsoft.com/en-us/aspnet/core/signalr/)
-- [Swagger/OpenAPI](https://swagger.io/docs/)
+## 📚 References
+- ASP.NET Core Docs
+- EF Core Docs
+- SignalR Docs
+- Swagger/OpenAPI Docs

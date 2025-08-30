@@ -7,13 +7,14 @@ using Legal.Service.Infrastructure.Model;
 using Legal.Service.Infrastructure.Services;
 using Legal.Service.Repository;
 using System.Reflection;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddLogging();
 
 // Add services to the container.
-builder.Services.AddExpenseApplicationLayer(builder.Configuration);
+builder.Services.AddAdminApplicationLayer(builder.Configuration);
 builder.Services
     .AddTransient(typeof(IRepository<,>), typeof(PostgresRepository<,>))
     .AddTransient(typeof(IDomainRepository<,>), typeof(DomainPostgresRepository<,>))
@@ -27,7 +28,19 @@ object value = builder.Services
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Legal API",
+        Version = "v1",
+        Description = "Dynamic CQRS endpoints. Command/Query handlers are executed via /api/Command/Execute/{module} and /api/Query/Execute/{module}. Use ListAll & Detail endpoints to discover handlers."
+    });
+
+    // Add a custom document filter to append handlers list into description
+    c.DocumentFilter<HandlersDocumentFilter>();
+});
+
 builder.Services
     .AddHttpContextAccessor()
     .AddSingleton(TimeProvider.System)
@@ -38,6 +51,9 @@ builder.Services
     .AddHostedService<DataSeederService>();
 
 builder.Services.AddTransient<TokenDelegateHandler>();
+
+// Register swagger helper filter dependency
+builder.Services.AddSingleton<HandlersDocumentFilter>();
 
 // CORS configuration fix
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
@@ -89,3 +105,51 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.RunAsync();
+
+// Swagger document filter to list handlers grouped by module
+public class HandlersDocumentFilter : Swashbuckle.AspNetCore.SwaggerGen.IDocumentFilter
+{
+    public void Apply(Microsoft.OpenApi.Models.OpenApiDocument swaggerDoc, Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext context)
+    {
+        // Build a markdown table of handlers
+        var registered = RequestHandler.GetRegisteredHandlers();
+        if (registered.Count == 0) return;
+
+        var lines = new List<string>();
+        lines.Add("Handlers registered by module (Commands & Queries):\n");
+        foreach (var module in registered.OrderBy(m => m.Key))
+        {
+            lines.Add($"### {module.Key}");
+            foreach (var handler in module.Value.OrderBy(t => t.Name))
+            {
+                // Identify type
+                var isCommand = IsSubclassOfRawGeneric(typeof(ACommandHandler<,>), handler);
+                var isQuery = IsSubclassOfRawGeneric(typeof(AQueryHandler<,>), handler);
+                var type = isCommand ? "Command" : isQuery ? "Query" : string.Empty;
+                lines.Add($"- {type}: {handler.Name.Replace("Handler", string.Empty)}");
+            }
+            lines.Add(string.Empty);
+        }
+
+        var appendix = string.Join("\n", lines);
+        if (swaggerDoc.Info.Description is null)
+            swaggerDoc.Info.Description = appendix;
+        else
+            swaggerDoc.Info.Description += "\n\n" + appendix;
+    }
+
+    private static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
+    {
+        while (toCheck != null && toCheck != typeof(object))
+        {
+            var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+            if (cur == generic)
+            {
+                return true;
+            }
+
+            toCheck = toCheck.BaseType!;
+        }
+        return false;
+    }
+}

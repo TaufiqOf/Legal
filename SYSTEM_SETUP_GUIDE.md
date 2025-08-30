@@ -1,234 +1,271 @@
-```markdown
-# Legal Contract Management System - Complete Setup Guide
+﻿# Legal Contract Management System - Complete Setup Guide
 
 ## Overview
-
-This system provides a complete legal contract management solution with:
-- **.NET 9 Web API Backend** - RESTful API with CQRS pattern
-- **Angular 20 Frontend** - Modern SPA with responsive design
-- **PostgreSQL Database** - Reliable data storage
-- **JWT Authentication** - Secure user authentication
+End‑to‑end contract management platform consisting of:
+- .NET 9 Web API (CQRS + modular Admin domain)
+- Angular 20 SPA frontend (Legal.Website)
+- PostgreSQL database (EF Core code‑first)
+- JWT authentication & role authorization
+- Optional background data seeding + dedicated MigrationService
 
 ## System Architecture
-
 ```
-Frontend (Angular)  ??  Backend (.NET 9 API)  ??  Database (PostgreSQL)
-     ?                        ?                         ?
-- User Interface          - Business Logic          - Data Storage
-- Authentication          - CQRS Handlers          - Entity Framework
-- Contract CRUD           - AutoMapper             - Migrations
-- Responsive Design       - JWT Tokens             - Audit Trails
+┌──────────────────┐     HTTPS/REST     ┌──────────────────┐     ADO / EF Core     ┌───────────────┐
+│  Angular SPA      │  <-------------->  │  .NET 9 API       │  <------------------->│  PostgreSQL    │
+│  (Legal.Website)  │  SignalR (future) │  (Legal.Api.WebApi)│                     │  (legaldb)     │
+└──────────────────┘                    │  CQRS Handlers    │                     └───────────────┘
+                                        │  Auth / Validation│
+                                        │  Background Seed  │
+                                        └──────────────────┘
+```
+Ancillary:
+- MigrationService (applies EF migrations across contexts before API start when containerized)
+
+## Repository Layout (Relevant)
+```
+Api/Legal.Api.WebApi/
+Application/Legal.Application.Admin/
+Shared/Legal.Shared.SharedModel/
+Service/Legal.Service.*
+Website/Legal.Website/               (Angular project, Legal.Website.esproj)
+OtherServices/MigrationService/
 ```
 
 ## Backend Components
+### API: Api/Legal.Api.WebApi
+- Command & Query endpoints (dynamic handler execution)
+- Swagger/OpenAPI UI
+- JWT Auth, CORS, Upload/Download
+- Background JSON seeding service
 
-### API Project: `Legal.Api.WebApi`
-- **Location**: `Api/Legal.Api.WebApi/`
-- **Purpose**: Main entry point for all API requests
-- **Key Features**:
-  - Command/Query execution endpoints
-  - JWT authentication
-  - CORS configuration
-  - File upload/download support
+### Application Layer: Application/Legal.Application.Admin
+- CQRS command/query handlers
+- Admin EF DbContext
+- Validation (FluentValidation) & mapping
 
-### Application Layer: `Legal.Application.Admin`
-- **Location**: `Application/Legal.Application.Admin/`
-- **Purpose**: Business logic and CQRS implementation
-- **Key Components**:
-  - Command Handlers (Save, Delete)
-  - Query Handlers (Get, GetPaged)
-  - Entity Framework Context
-  - AutoMapper configuration
+### Shared: Shared/Legal.Shared.SharedModel
+- DTOs, SQL helper models, abstractions
 
-### Shared Models: `Legal.Shared.SharedModel`
-- **Location**: `Shared/Legal.Shared.SharedModel/`
-- **Purpose**: DTOs and shared contracts
-- **Models**:
-  - ContractParameterModel
-  - ContractResponseModel
-  - Authentication models
+### Migration Service: OtherServices/MigrationService
+- Console utility to discover contexts & run migrations
+- CLI switches: `--update-database "y|n"`, `--context-number "-1|list|range"`, `--data-db "..."`
 
-## Frontend Components
+## Frontend Component
+### Angular SPA: Website/Legal.Website
+- Managed by Legal.Website.esproj (VS JavaScript project system)
+- Uses `npm start` (dev server) & Docker (nginx) for production
 
-### Angular Application: `Legal.Website`
-- **Location**: `Legal.Website/`
-- **Purpose**: User interface for contract management
-- **Key Features**:
-  - Login/Registration
-  - Contract CRUD operations
-  - Responsive design with Bootstrap
-  - JWT token management
+Correct path note: Earlier docs referenced `Legal.Website/` at root; actual path is `Website/Legal.Website/`.
 
-## Setup Instructions
+## Ports (Typical Defaults)
+- API (dev with Kestrel / HTTPS): 5001 (HTTPS) / 5000 (HTTP) OR 4020 when using compose (see docker files)
+- Website (Angular dev server): 4200
+- Website (nginx container): 8080
+- PostgreSQL: 5432
+(Adjust according to docker-compose or launchSettings.json.)
 
-### 1. Backend Setup
+## Environment Configuration
+Backend (env vars / user secrets):
+- `ConnectionStrings:Postgres` or `ConnectionStrings__Postgres`
+- `AllowedOrigins`
+- `Jwt:Issuer`, `Jwt:Audience`, `Jwt:Key` (if implemented)
+Frontend build‐time (environment.ts / prod):
+- `apiBaseUrl`
 
-1. **Database Setup**:
-   ```bash
-   # Ensure PostgreSQL is running
-   # Update connection string in appsettings.json
-   ```
+## Setup Paths
+| Task | Path |
+|------|------|
+| API Project | Api/Legal.Api.WebApi |
+| Angular Project | Website/Legal.Website |
+| Migration Service | OtherServices/MigrationService |
+| Seed JSON | Api/Legal.Api.WebApi/Seed (example) |
 
-2. **Run Migrations**:
-   ```bash
-   cd Application/Legal.Application.Admin
-   dotnet ef database update
-   ```
+---
+## Local Development (Manual / CLI)
+### 1. Database
+Ensure PostgreSQL running and create database (if not auto created):
+```sql
+CREATE DATABASE "LegalDB";
+```
+### 2. Configure API Connection String
+```bash
+dotnet user-secrets set "ConnectionStrings:Postgres" "Host=localhost;Database=LegalDB;Username=postgres;Password=postgres;Port=5432" --project Api/Legal.Api.WebApi
+```
+### 3. Apply Migrations
+Option A (direct EF):
+```bash
+dotnet ef database update --project Application/Legal.Application.Admin
+```
+Option B (central service):
+```bash
+dotnet run --project OtherServices/MigrationService -- --update-database "y" --context-number "-1"
+```
+### 4. (Optional) Data Seeding
+Add to Api/Legal.Api.WebApi appsettings.Development.json:
+```json
+"InitializationOptions": [
+  { "FilePath": "Seed/admin_users.json", "DoUpdate": true }
+]
+```
+Ensure JSON file is copied to output (`Copy to Output Directory`). Run API once.
+### 5. Run API
+```bash
+dotnet run --project Api/Legal.Api.WebApi
+```
+Swagger: https://localhost:5001/swagger
+### 6. Frontend
+```bash
+cd Website/Legal.Website
+npm install
+npm start
+```
+Browser: http://localhost:4200
 
-3. **Start API**:
-   ```bash
-   cd Api/Legal.Api.WebApi
-   dotnet run
-   ```
-   - API will be available at `https://localhost:7001`
+---
+## Visual Studio Workflow (Docker Compose)
+1. Install workloads: ASP.NET + Containers + JS/TS.
+2. Open solution; ensure `docker-compose` project present.
+3. Set docker-compose as Startup (contains API, Website, MigrationService, PostgreSQL services).
+4. Optional: Edit `docker-compose.override.yml` for port & env overrides (e.g., API_PORT, WEB_PORT).
+5. Press F5 → VS builds images, runs MigrationService (migrations), then API & Website.
+6. Access:
+   - Website (nginx): http://localhost:8080
+   - API: http://localhost:4020/swagger
+7. Debugging: Breakpoints in API; for Angular hot reload prefer `npm start` outside Docker while API stays containerized.
 
-### 2. Frontend Setup
+---
+## Docker CLI Workflow (Without VS)
+```bash
+# Build & start all services
+docker compose up -d --build
 
-1. **Install Dependencies**:
-   ```bash
-   cd Legal.Website
-   npm install
-   ```
+# View logs
+docker compose logs -f
 
-2. **Configure API URL**:
-   - Development: Update `src/environments/environment.ts`
-   - Production: Update `src/environments/environment.prod.ts`
+# Rebuild specific service
+docker compose build legal.api.webapi
+```
+Stop / Remove:
+```bash
+docker compose down        # keep volumes
+docker compose down -v     # remove volumes/data
+```
 
-3. **Start Development Server**:
-   ```bash
-   npm start
-   ```
-   - Application will be available at `http://127.0.0.1:4200`
+### Overriding Environment
+Create `.env` (if not already):
+```
+POSTGRES_DB=legaldb
+POSTGRES_USER=legaluser
+POSTGRES_PASSWORD=legalpass
+API_PORT=4020
+WEB_PORT=8080
+```
 
-## API Endpoints
+---
+## API Interaction (CQRS Endpoints)
+All commands/queries POST JSON payloads containing handler name & data (pattern representative):
+```
+POST /api/Command/Execute/ADMIN
+POST /api/Query/Execute/ADMIN
+```
+Example Login (command body shape may vary):
+```json
+{
+  "name": "LogInCommandHandler",
+  "data": { "userName": "admin", "password": "P@ssw0rd" }
+}
+```
+Paged Contracts Query:
+```json
+{
+  "name": "GetByPagedContractQueryHandlers",
+  "data": { "page": 1, "pageSize": 20, "search": "" }
+}
+```
+Save Contract Command:
+```json
+{
+  "name": "SaveContractCommandHandler",
+  "data": { "id": null, "name": "NDA", "author": "Admin", "description": "Mutual NDA" }
+}
+```
+Delete Contract Command:
+```json
+{
+  "name": "DeleteContractCommandHandler",
+  "data": { "id": "<contract-id>" }
+}
+```
 
-### Authentication
-- **POST** `/api/Command/Execute/ADMIN`
-  - Login: `LogInCommandHandler`
-  - Register: `RegistrationCommandHandler`
-
-### Contract Management
-- **POST** `/api/Query/Execute/ADMIN`
-  - Get Contracts: `GetByPagedContractQueryHandlers`
-  - Get Contract: `GetContractQueryHandler`
-- **POST** `/api/Command/Execute/ADMIN`
-  - Save Contract: `SaveContractCommandHandler`
-  - Delete Contract: `DeleteContractCommandHandler`
-
-## Contract Model Structure
-
+### Contract Model (Example)
 ```typescript
 interface Contract {
   id: string;
   name: string;
   author: string;
   description: string;
-  created: Date;
-  updated?: Date;
+  created: string; // ISO date
+  updated?: string;
 }
 ```
 
-## User Workflow
+---
+## User Workflow Summary
+1. Register / login via command endpoint, obtain JWT.
+2. Store token in frontend (localStorage / memory). Attach Authorization header.
+3. Browse paginated contracts, create/update/delete.
+4. Logout clears token.
 
-### 1. User Registration/Login
-1. Navigate to the application
-2. Register new account or login
-3. Receive JWT token for subsequent requests
+---
+## Security
+- JWT authorization header: `Authorization: Bearer <token>`
+- CORS restricted by AllowedOrigins
+- Password hashing (backend) + validation
+- Planned: refresh tokens, role expansion
 
-### 2. Contract Management
-1. View paginated list of contracts
-2. Create new contracts with form validation
-3. Edit existing contracts
-4. View contract details
-5. Delete contracts with confirmation
+---
+## Development Productivity
+- Hot Reload (API) via `dotnet watch` (optional)
+- Angular dev server live reload
+- Centralized exception handling + logging
 
-### 3. Navigation
-- Protected routes require authentication
-- Automatic logout on token expiration
-- Breadcrumb navigation for easy movement
-
-## Security Features
-
-- **JWT Authentication**: Stateless token-based authentication
-- **Route Guards**: Protected routes in Angular
-- **HTTP Interceptors**: Automatic token attachment
-- **Password Hashing**: Secure password storage in backend
-- **CORS Configuration**: Proper cross-origin request handling
-
-## Development Features
-
-- **Hot Reload**: Both frontend and backend support hot reload
-- **Error Handling**: Comprehensive error handling throughout
-- **Validation**: Client and server-side validation
-- **Logging**: Structured logging in backend
-- **Testing**: Ready for unit and integration tests
-
-## Production Deployment
-
-### Backend Deployment
-1. Configure production database connection
-2. Set up environment variables
-3. Deploy to IIS, Docker, or cloud service
-4. Configure HTTPS certificates
-
-### Frontend Deployment
-1. Build for production: `npm run build`
-2. Deploy `dist/` contents to web server
-3. Configure URL rewriting for SPA routes
-4. Ensure API endpoints are accessible
-
-## Configuration Files
-
-### Backend Configuration
-- `appsettings.json`: Database connections, JWT settings
-- `Program.cs`: Service registration and middleware
-
-### Frontend Configuration
-- `environment.ts`: Development API URLs
-- `environment.prod.ts`: Production API URLs
-- `angular.json`: Build and serve configuration
-
-## Database Schema
-
-### Tables
-- **user**: User accounts and authentication
-- **contract**: Contract data with audit fields
-
-### Key Features
-- Audit trails (created/modified by/time)
-- Soft delete capability
-- Foreign key relationships
-- Proper indexing
-
-## Troubleshooting
-
-### Common Issues
-1. **CORS Errors**: Check CORS configuration in backend
-2. **Authentication Failures**: Verify JWT configuration
-3. **Database Connection**: Check connection string and PostgreSQL service
-4. **Build Errors**: Ensure all dependencies are installed
-
-### Logs and Debugging
-- Backend logs: Check console output and log files
-- Frontend logs: Use browser developer tools
-- Database logs: Check PostgreSQL logs for query issues
-
-## Future Enhancements
-
-- Email verification for registration
-- Password reset functionality
-- Role-based access control
-- Document attachments for contracts
-- Contract versioning
-- Advanced search and filtering
-- Audit log viewer
-- Multi-tenant support
-
-## Support
-
-For issues and questions:
-1. Check the README files in each project
-2. Review the API documentation
-3. Check application logs
-4. Verify configuration settings
+---
+## Production Deployment Checklist
+Backend:
+- Set `ASPNETCORE_ENVIRONMENT=Production`
+- Provide strong JWT key (user secrets / env var)
+- Run MigrationService (one-off) or ensure automatic migration job
+- Reverse proxy / HTTPS termination (nginx / Azure / AWS ALB)
+Frontend:
+```bash
+npm run build
+# Deploy dist/Legal.Website to static host or container image build
 ```
+Database:
+- Provision managed PostgreSQL / secure network
+- Backups & monitoring
+
+---
+## Troubleshooting
+| Symptom | Check |
+|---------|-------|
+| 404 on SPA refresh | nginx/SPA rewrite config (in Docker image) |
+| CORS error | AllowedOrigins value & protocol/port accuracy |
+| Auth fails | JWT key/issuer mismatch, clock skew |
+| DB connect fail | Connection string / container network / port mapping |
+| Migration hang | Lock or failed previous migration; inspect MigrationService logs |
+
+Logs:
+```bash
+docker compose logs -f legal.api.webapi
+docker compose logs -f legal.website
+```
+
+---
+## Support
+1. Review root README & DOCKER_DEPLOYMENT.md
+2. Check container & application logs
+3. Verify environment variables & connection strings
+
+---
+(End of Guide)

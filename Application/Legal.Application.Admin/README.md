@@ -1,331 +1,180 @@
 # Legal.Application.Admin
 
 ## Overview
+Administrative (Admin) application layer for the Legal system. Implements CQRS style command / query handler discovery, EF Core (PostgreSQL, snake_case), AutoMapper mapping, and domain services for Users & Contracts.
 
-The Admin Application layer contains the business logic and use cases for the administrative module of the Legal API System. This project implements the Command Query Responsibility Segregation (CQRS) pattern with Entity Framework Core for data persistence.
+## Architecture
+Implements Clean Architecture application layer responsibilities:
+- Command Handlers: state-changing operations (User, Contract, Auth)
+- Query Handlers: (extensible – add for read scenarios)
+- EF Core DbContext: AdminDatabaseContext with naming conventions & migration history table
+- Mapping (AutoMapper) via centralized MappingConfig
+- Domain Services (e.g., RegistrationService, Contract service abstraction)
+- Parameter / Response models (shared project) consumed by handlers
+- Dependency injection extension for module bootstrap
 
-## ??? Architecture
-
-This application layer follows Clean Architecture principles and implements:
-- **Command Handlers** - Write operations and business logic
-- **Query Handlers** - Read operations and data retrieval
-- **Entity Framework Context** - Database context and migrations
-- **DTOs and Mapping** - Data transfer objects and AutoMapper configuration
-- **Services** - Business services and domain logic
-
-## ?? Project Structure
-
+## Project Structure (excerpt)
 ```
 Legal.Application.Admin/
-??? CommandHandlers/
-?   ??? RegistrationCommandHandler.cs
-?   ??? LogInCommandHandler.cs
-?   ??? ChangePasswordCommandHandler.cs
-?   ??? UserCommands/
-?       ??? DeleteUserCommandHandler.cs
-?       ??? EditUserCommandHandler.cs
-??? Services/
-?   ??? RegistrationService.cs
-?   ??? IRegistrationService.cs
-??? EntityConfigurations/
-?   ??? UserEntityTypeConfiguration.cs
-?   ??? AuditableEntityTypeConfiguration.cs
-??? Migrations/
-?   ??? 20250829160713_init.cs
-?   ??? 20250829160713_init.Designer.cs
-?   ??? AdminDatabaseContextModelSnapshot.cs
-??? Dtos/
-?   ??? UserDto.cs
-??? DataSeeder/
-?   ??? public.user.json
-??? AdminDatabaseContext.cs
-??? DependencyInjection.cs
-??? MappingConfig.cs
-??? GlobalUsings.cs
-??? README.md
+  CommandHandlers/
+    Auth/
+      RegistrationCommandHandler.cs
+      LogInCommandHandler.cs
+      ChangePasswordCommandHandler.cs
+    User/
+      EditUserCommandHandler.cs
+      DeleteUserCommandHandler.cs
+    Contract/
+      SaveContractCommandHandler.cs
+      DeleteContractCommandHandler.cs
+  Dtos/
+    UserDto.cs
+    ContractDto.cs
+  Infrastructure/
+    IContractService.cs (and implementation in Service layer)
+  EntityConfigurations/
+    UserEntityTypeConfiguration.cs
+    AuditableEntityTypeConfiguration.cs
+  AdminDatabaseContext.cs
+  MappingConfig.cs
+  DependencyInjection.cs
+  Migrations/ (generated EF migrations)
+  DataSeeder/public.user.json
 ```
 
-## ?? Features
+## Key Features
+### User & Auth
+- Registration (email uniqueness, password hashing)
+- Login (JWT token issuance)
+- Change password
+- Edit / delete user
 
-### User Management
-- **User Registration** - Create new user accounts
-- **User Authentication** - Login and password validation
-- **User Profile Management** - Edit and delete user accounts
-- **Password Management** - Change password functionality
+### Contracts
+- Save (create / update) contract (SaveContractCommandHandler)
+- Delete contract (DeleteContractCommandHandler)
+(Additional queries to list / get contracts can be added using query handlers.)
 
-### Data Seeding
-- **Initial User Data** - Seed default users from JSON configuration
-- **Database Initialization** - Automatic database setup
+### Shared Concerns
+- Automatic handler registration & caching via RequestHandler
+- AutoMapper mapping profiles created fluently
+- Background JSON seeding (see root guide) – copies initial users
 
-### Security
-- **Password Hashing** - Secure password storage
-- **JWT Token Generation** - Authentication token creation
-- **Role-based Access** - User role management
-
-## ??? Database Context
-
-### AdminDatabaseContext
-
-The main Entity Framework context that manages:
-- **User entities** - User account data
-- **Auditable entities** - Entities with audit trails
-- **Snake case naming** - PostgreSQL naming convention
-- **Migration history** - Dedicated migration table
-
+## AdminDatabaseContext
+Configured in DependencyInjection:
 ```csharp
-public class AdminDatabaseContext : ADatabaseContext
-{
-    // Entity sets and configuration
-}
+services.AddDbContextFactory<AdminDatabaseContext>(options =>
+    options.UseNpgsql(conn, x => x.MigrationsHistoryTable("__EFMigrationsHistory", ModuleName.ADMIN.ToString()))
+           .UseSnakeCaseNamingConvention());
 ```
+Includes entity configurations (User, auditable base). Migration history scoped per module.
 
-### Entity Configurations
-
-#### UserEntityTypeConfiguration
-- User table structure
-- Constraints and indexes
-- Relationships
-
-#### AuditableEntityTypeConfiguration
-- Common auditable fields
-- Created/updated timestamps
-- User tracking
-
-## ?? Command Handlers
-
-### RegistrationCommandHandler
-Handles new user registration:
-- Validates user input
-- Checks for duplicate emails
-- Creates user account
-- Generates initial access token
-
-### LogInCommandHandler
-Handles user authentication:
-- Validates credentials
-- Verifies password hash
-- Generates JWT token
-- Returns user information
-
-### ChangePasswordCommandHandler
-Handles password changes:
-- Validates current password
-- Updates password hash
-- Logs security event
-
-### User Command Handlers
-
-#### EditUserCommandHandler
-- Updates user profile information
-- Validates changes
-- Maintains audit trail
-
-#### DeleteUserCommandHandler
-- Soft delete user accounts
-- Maintains data integrity
-- Logs deletion event
-
-## ?? Query Handlers
-
-(Query handlers to be implemented based on requirements)
-
-## ??? Services
-
-### RegistrationService
-Encapsulates user registration business logic:
-- Email uniqueness validation
-- Password policy enforcement
-- User data validation
-- Account activation logic
-
-## ?? Data Transfer Objects
-
-### UserDto
-Represents user data for API responses:
-- User identification
-- Profile information
-- Role assignments
-- Excludes sensitive data
-
-## ??? AutoMapper Configuration
-
-### MappingConfig
-Defines object-to-object mappings:
-- Entity to DTO mappings
-- Command to entity mappings
-- Reverse mappings where needed
-
+## Dependency Injection Extension
 ```csharp
-public static class MappingConfig
+public static class DependencyInjection
 {
-    public static IMapper RegisterMappings()
+    public static IServiceCollection AddAdminApplicationLayer(this IServiceCollection services, IConfiguration configuration)
     {
-        // Mapping profiles configuration
+        services.AddMemoryCache();
+        services.AddDbContextFactory<AdminDatabaseContext>(options =>
+        {
+            var cs = configuration.GetConnectionString(ConnectionStringsConstants.Postgres);
+            options.UseNpgsql(cs, x => x.MigrationsHistoryTable("__EFMigrationsHistory", ModuleName.ADMIN.ToString()))
+                   .UseSnakeCaseNamingConvention();
+        });
+        services.RegisterTypes(Assembly.GetExecutingAssembly(), typeof(IBaseModel), typeof(IEntityTypeConfiguration<>));
+        services.AddLogging();
+        var mapper = MappingConfig.RegisterMappings();
+        services.AddScoped(_ => mapper);
+        var handlers = services.RegisterHandlers(Assembly.GetExecutingAssembly(), typeof(ACommandHandler<,>), typeof(AQueryHandler<,>));
+        RequestHandler.SetRequestHandlers(ModuleName.ADMIN, handlers);
+        return services;
     }
 }
 ```
+(Use `AddAdminApplicationLayer` in API Program.cs.)
 
-## ??? Dependency Injection
+## Mapping Configuration
+`MappingConfig` sets up projection paths:
+- User -> UserResponseModel / UserDto
+- RegistrationParameterModel -> UserDto
+- ContractParameterModel <-> ContractDto -> Contract -> ContractResponseModel
+Call `MappingConfig.RegisterMappings()` during DI extension.
 
-### DependencyInjection Extension
-Configures all dependencies for the Admin module:
+## Command Handlers
+Examples:
+- `RegistrationCommandHandler` – create user & token
+- `LogInCommandHandler` – authenticate & token
+- `ChangePasswordCommandHandler` – update password
+- `EditUserCommandHandler` – modify profile/name
+- `DeleteUserCommandHandler` – soft delete (implementation may adapt repository logic)
+- `SaveContractCommandHandler` – upsert contract
+- `DeleteContractCommandHandler` – delete contract
 
+Pattern: Each handler derives from `ACommandHandler<TParameter, TResponse>` and overrides
 ```csharp
-public static IServiceCollection AddExpenseApplicationLayer(
-    this IServiceCollection services,
-    IConfiguration configuration)
-{
-    // Service registrations
-}
+public override Task<TResponse> Execute(TParameter parameter, CancellationToken ct)
 ```
+Attributes like `[TokenAuthorize]` enforce auth where required.
 
-#### Registered Services
-- **Entity Framework Context** - Database context factory
-- **AutoMapper** - Object mapping service
-- **Command/Query Handlers** - Business logic handlers
-- **Domain Services** - Business services
-- **Memory Cache** - Caching service
+## Adding a New Handler
+1. Create parameter model in Shared project if not existing.
+2. Implement handler deriving from `ACommandHandler` or `AQueryHandler`.
+3. Ensure mapping if model/entity translation is needed.
+4. Build – DI extension auto-discovers & registers; RequestHandler caches it.
 
-## ?? Database Migrations
-
-### Initial Migration (20250829160713_init)
-Creates the initial database schema:
-- User tables
-- Audit tables
-- Indexes and constraints
-
-### Migration Commands
-
-```bash
-# Add new migration
-dotnet ef migrations add <MigrationName> --project Legal.Application.Admin
-
-# Update database
-dotnet ef database update --project Legal.Application.Admin
-
-# Remove last migration
-dotnet ef migrations remove --project Legal.Application.Admin
-```
-
-## ?? Data Seeding
-
-### Default Users (public.user.json)
-Contains initial user data for system setup:
-- Administrative users
-- Default roles
-- Test accounts (development only)
-
-### DataSeederService Integration
-The seeding is integrated with the main API through the data seeder service.
-
-## ?? Security Features
-
-### Password Security
-- **BCrypt Hashing** - Strong password hashing
-- **Salt Generation** - Unique salt per password
-- **Policy Enforcement** - Password complexity rules
-
-### Authentication
-- **JWT Tokens** - Stateless authentication
-- **Role Claims** - Role-based authorization
-- **Token Expiration** - Configurable token lifetime
-
-## ?? Dependencies
-
-### NuGet Packages
-
-- **FFMpegCore** (5.1.0) - Video processing capabilities
-- **Microsoft.AspNetCore.SignalR.*** - Real-time communication
-- **EFCore.NamingConventions** (8.0.3) - Snake case naming
-- **Microsoft.EntityFrameworkCore.Design** (8.0.13) - EF Core tools
-- **SixLabors.ImageSharp** (3.1.11) - Image processing
-- **Microsoft.Extensions.Configuration.UserSecrets** - Configuration management
-
-### Project References
-
-- **Legal.Service.Infrastructure** - Core infrastructure services
-- **Legal.Service.Repository** - Data access layer
-- **Legal.Shared.SharedModel** - Shared models and DTOs
-
-## ?? Usage Examples
-
-### User Registration
-
-```csharp
-public class RegistrationCommand : IParameterModel<IValidator>
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-}
-```
-
-### User Login
-
-```csharp
-public class LogInCommand : IParameterModel<IValidator>
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
-}
-```
-
-## ?? Testing
-
-### Unit Testing
-(To be implemented)
-- Command handler tests
-- Service tests
-- Validation tests
-
-### Integration Testing
-(To be implemented)
-- Database integration tests
-- End-to-end scenarios
-
-## ?? Configuration
-
-### Connection String
-Configure PostgreSQL connection in appsettings.json:
-
+## Usage (API Invocation)
+API layer posts a JSON body specifying the handler name (convention) & parameter payload.
+Example (Login):
 ```json
 {
-  "ConnectionStrings": {
-    "Postgres": "Host=localhost;Database=LegalDB;Username=user;Password=pass"
-  }
+  "name": "LogInCommandHandler",
+  "data": { "email": "admin@example.com", "password": "P@ssw0rd" }
+}
+```
+Save Contract:
+```json
+{
+  "name": "SaveContractCommandHandler",
+  "data": { "id": null, "name": "NDA", "author": "Admin", "description": "Mutual NDA" }
 }
 ```
 
-### Module Registration
-The module is registered in the main API startup:
+## Migrations
+Generate migrations from this project (context lives here):
+```bash
+dotnet ef migrations add Init --project Application/Legal.Application.Admin --startup-project Api/Legal.Api.WebApi
 
-```csharp
-builder.Services.AddExpenseApplicationLayer(builder.Configuration);
+dotnet ef database update --project Application/Legal.Application.Admin --startup-project Api/Legal.Api.WebApi
 ```
+(Startup project ensures proper design-time services.)
 
-## ?? Performance Considerations
+## Data Seeding
+`DataSeeder/public.user.json` is copied to output (Always). Combined with API seeding infrastructure you can insert initial admin user(s).
 
-### Database Optimization
-- **Indexes** - Proper indexing on frequently queried columns
-- **Connection Pooling** - EF Core connection pooling
-- **Query Optimization** - Efficient LINQ queries
+## Security
+- Password hashing (implementation in Service layer)
+- JWT issuance (Token service – outside this project but invoked by handlers)
+- `[TokenAuthorize]` attribute for protected handlers
 
-### Caching
-- **Memory Cache** - Configured for frequently accessed data
-- **Entity Tracking** - Optimized for read scenarios
+## Performance & Reliability
+- DbContext factory for scoped creation in handlers
+- Snake_case naming reduces friction with PostgreSQL
+- AutoMapper pre-initialization reduces runtime config cost
+- MemoryCache available for read optimization (future queries)
 
-## ?? Future Enhancements
+## Testing (Roadmap)
+- Unit tests: handler Execute logic (mock IRepository / services)
+- Integration: in-memory or Testcontainers PostgreSQL applying migrations
+- Mapping tests: assert configuration validity via `mapper.ConfigurationProvider.AssertConfigurationIsValid()`
 
-- **Email Verification** - Account activation via email
-- **Password Reset** - Forgot password functionality
-- **Multi-factor Authentication** - Enhanced security
-- **Audit Logging** - Comprehensive audit trails
-- **User Roles Management** - Advanced role system
+## Future Enhancements
+- Query handlers for contract listing & filtering
+- Audit logging & soft delete standardization
+- Role / permission granularity & claims enrichment
+- Pagination & caching strategies
+- Validation layer per parameter (FluentValidation integration in shared models)
 
-## ?? References
-
-- [Entity Framework Core Documentation](https://docs.microsoft.com/en-us/ef/core/)
-- [AutoMapper Documentation](https://docs.automapper.org/)
-- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [CQRS Pattern](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs)
+## References
+- EF Core Docs
+- AutoMapper Docs
+- Clean Architecture / CQRS guidance

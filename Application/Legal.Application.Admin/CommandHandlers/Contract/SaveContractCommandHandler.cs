@@ -1,10 +1,13 @@
 ﻿using Legal.Application.Admin.Dtos;
 using Legal.Application.Admin.Infrastructure;
 using Legal.Service.Infrastructure.Model;
+using Legal.Service.Infrastructure.Services;
 using Legal.Shared.SharedModel.ParameterModel.Contract;
 using Legal.Shared.SharedModel.ResponseModel.Contract;
 
 namespace Legal.Application.Admin.CommandHandlers.Contract;
+
+[TokenAuthorize]
 public class SaveContractCommandHandler : ACommandHandler<ContractParameterModel, ContractResponseModel>
 {
     public SaveContractCommandHandler(

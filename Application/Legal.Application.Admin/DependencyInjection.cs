@@ -10,7 +10,7 @@ namespace Legal.Application.Admin;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddExpenseApplicationLayer(
+    public static IServiceCollection AddAdminApplicationLayer(
         this IServiceCollection services,
         IConfiguration configuration)
     {
