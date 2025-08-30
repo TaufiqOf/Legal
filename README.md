@@ -1,7 +1,7 @@
 ﻿# Legal API System
 
 ## Overview
-The Legal API System is a modular .NET 9 web application built with Clean Architecture & DDD. It provides a foundation for legal document management and multi-domain business modules (current: Admin; future: Shop, Chat).
+The Legal API System is a modular monolithic .NET 9 web application built with Clean Architecture & DDD. It provides a foundation for legal document management and multi-domain business modules (current: Admin).
 
 ## ⚙️ Architecture
 Layers:
@@ -33,7 +33,7 @@ Legal.Api.Solution/
 │   ├── Legal.Service.Repository/
 │   └── Legal.Service.Helper/
 ├── Shared/Legal.Shared.SharedModel/
-├── Website/Legal.Website/                # Frontend (Legal.Website.esproj)
+├── Website/Legal.Website/
 └── OtherServices/MigrationService/
 ```
 
