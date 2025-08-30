@@ -216,6 +216,11 @@ Planned additions:
 - FluentAssertions for expressive assertions
 - Minimal API contract tests via Microsoft.AspNetCore.Mvc.Testing
 
+## ⚠️ Disclaimer
+- Backend architecture was originally designed and written by the author for a personal project and reused here (no AI assistance for backend implementation).
+- All documentation content was generated with GitHub Copilot and reviewed/edited by the author.
+- Frontend boilerplate was generated using GitHub Copilot and then manually updated/refined.
+
 ## 📝 License
 MIT License © Taufiq Abdur Rahman
 You may not use this codebase without permission. For Evolution purposes only.
