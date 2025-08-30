@@ -28,9 +28,9 @@ export class AuthService {
         const payload = this.decodeToken(token);
         if (payload && payload.exp > Date.now() / 1000) {
           const user: User = {
-            id: payload.sub,
-            name: payload.name,
-            userName: payload.userName
+            id: payload.UserId,
+            name: payload.Name,
+            userName: payload.UserName
           };
           this.currentUserSubject.next(user);
           this.isAuthenticatedSubject.next(true);
@@ -58,7 +58,7 @@ export class AuthService {
         tap(response => {
           if (response.success && response.result) {
             localStorage.setItem('token', response.result.token);
-            this.currentUserSubject.next(response.result.user);
+            this.currentUserSubject.next(response.result);
             this.isAuthenticatedSubject.next(true);
           }
         })
@@ -71,7 +71,7 @@ export class AuthService {
         tap(response => {
           if (response.success && response.result) {
             localStorage.setItem('token', response.result.token);
-            this.currentUserSubject.next(response.result.user);
+            this.currentUserSubject.next(response.result);
             this.isAuthenticatedSubject.next(true);
           }
         })

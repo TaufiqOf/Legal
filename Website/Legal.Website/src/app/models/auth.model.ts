@@ -21,7 +21,9 @@ export interface RegistrationRequest {
 export interface AuthResponse {
   success: boolean;
   result: {
-    user: User;
+    id: string;
+    name: string;
+    userName: string;
     token: string;
   };
   message?: string;
@@ -29,9 +31,9 @@ export interface AuthResponse {
 }
 
 export interface JwtPayload {
-  sub: string;
-  name: string;
-  userName: string;
+  UserId: string;
+  Name: string;
+  UserName: string;
   exp: number;
   iat: number;
 }
