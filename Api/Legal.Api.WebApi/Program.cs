@@ -56,11 +56,6 @@ builder.Services.AddCors(options =>
         }
         else
         {
-            // Wildcard intent: either allow all WITHOUT credentials OR echo any origin WITH credentials
-            // Option 1 (allow all, no credentials):
-            // policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-
-            // Option 2 (allow all, keep credentials): echo back request origin
             policy.SetIsOriginAllowed(_ => true)
                   .AllowAnyHeader()
                   .AllowAnyMethod()

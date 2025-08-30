@@ -21,5 +21,6 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="README.md" />
+    <None Include="SYSTEM_SETUP_GUIDE.md" />
   </ItemGroup>
 </Project>

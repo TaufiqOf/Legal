@@ -1,0 +1,96 @@
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
+  <div class="row w-100 justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow">
+        <div class="card-header bg-success text-white text-center">
+          <h4 class="mb-0">Create Account</h4>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                formControlName="name"
+                [class.is-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+              />
+              <div class="invalid-feedback" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+                <div *ngIf="registerForm.get('name')?.errors?.['required']">Full name is required</div>
+                <div *ngIf="registerForm.get('name')?.errors?.['minlength']">Full name must be at least 2 characters</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="userName" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="userName"
+                formControlName="userName"
+                [class.is-invalid]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
+              />
+              <div class="invalid-feedback" *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched">
+                <div *ngIf="registerForm.get('userName')?.errors?.['required']">Username is required</div>
+                <div *ngIf="registerForm.get('userName')?.errors?.['minlength']">Username must be at least 3 characters</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+              />
+              <div class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</div>
+                <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                [class.is-invalid]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+              />
+              <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+                <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</div>
+                <div *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</div>
+              </div>
+            </div>
+
+            <div class="alert alert-danger" *ngIf="error">
+              {{ error }}
+            </div>
+
+            <div class="d-grid gap-2">
+              <button
+                type="submit"
+                class="btn btn-success"
+                [disabled]="loading || registerForm.invalid"
+              >
+                <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
+                {{ loading ? 'Creating Account...' : 'Create Account' }}
+              </button>
+            </div>
+
+            <div class="text-center mt-3">
+              <p class="mb-0">
+                Already have an account?
+                <a href="#" (click)="navigateToLogin()" class="text-success">Sign in here</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">Contract Details</h2>
+        <div class="d-flex align-items-center">
+          <span class="me-3">Welcome, {{ getCurrentUser()?.name }}</span>
+          <button class="btn btn-outline-secondary me-2" (click)="logout()">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="row mb-3">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#" (click)="goBack()">Contracts</a>
+          </li>
+          <li class="breadcrumb-item active">View Contract</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="text-center py-4" *ngIf="loading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading contract...</span>
+    </div>
+  </div>
+
+  <!-- Contract Details -->
+  <div class="row" *ngIf="!loading && contract">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">{{ contract.name }}</h5>
+          <div class="btn-group">
+            <button class="btn btn-primary btn-sm" (click)="editContract()">
+              <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteContract()">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>Contract Name:</strong>
+            </div>
+            <div class="col-sm-9">
+              {{ contract.name }}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>Author:</strong>
+            </div>
+            <div class="col-sm-9">
+              {{ contract.author }}
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-sm-3">
+              <strong>Created:</strong>
+            </div>
+            <div class="col-sm-9">
+              {{ contract.created | date:'full' }}
+            </div>
+          </div>
+
+          <div class="row mb-3" *ngIf="contract.updated">
+            <div class="col-sm-3">
+              <strong>Last Updated:</strong>
+            </div>
+            <div class="col-sm-9">
+              {{ contract.updated | date:'full' }}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-3">
+              <strong>Description:</strong>
+            </div>
+            <div class="col-sm-9">
+              <div class="description-content">
+                {{ contract.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions Panel -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">Actions</h6>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" (click)="editContract()">
+              <i class="bi bi-pencil"></i> Edit Contract
+            </button>
+            <button class="btn btn-outline-secondary" (click)="goBack()">
+              <i class="bi bi-arrow-left"></i> Back to List
+            </button>
+            <hr>
+            <button class="btn btn-outline-danger" (click)="deleteContract()">
+              <i class="bi bi-trash"></i> Delete Contract
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contract Info -->
+      <div class="card mt-3">
+        <div class="card-header">
+          <h6 class="mb-0">Contract Information</h6>
+        </div>
+        <div class="card-body">
+          <div class="small">
+            <div class="mb-2">
+              <strong>ID:</strong> {{ contract.id }}
+            </div>
+            <div class="mb-2">
+              <strong>Status:</strong> 
+              <span class="badge bg-success">Active</span>
+            </div>
+            <div class="mb-2">
+              <strong>Type:</strong> Legal Contract
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Not Found Message -->
+  <div class="text-center py-4" *ngIf="!loading && !contract && !error">
+    <h4>Contract Not Found</h4>
+    <p class="text-muted">The contract you're looking for doesn't exist or has been deleted.</p>
+    <button class="btn btn-primary" (click)="goBack()">
+      Back to Contracts
+    </button>
+  </div>
+</div>

@@ -40,7 +40,7 @@ services:
     volumes:
       - ${STORAGE_PATH}:/app/uploads:rw
     ports:
-      - "${PORT}:5020"
+      - "${PORT}:4020"
     restart: always
     depends_on:
       - postgres
