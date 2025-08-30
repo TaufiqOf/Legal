@@ -1,0 +1,175 @@
+[
+  {
+    "id": "contract-1756521001001-q1w2e3r4t",
+    "author": "Alice Johnson",
+    "name": "Mutual NDA – Acme & Globex",
+    "description": "Mutual non-disclosure agreement covering product roadmap discussions.",
+    "created": "2025-08-30T02:50:01.100Z",
+    "updated": "2025-08-30T02:50:01.100Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521002002-a9sd8f7gh",
+    "author": "Brian Chen",
+    "name": "Software License Agreement v2.1",
+    "description": "Grant of non-exclusive license for internal analytics platform usage.",
+    "created": "2025-08-30T02:50:02.120Z",
+    "updated": "2025-08-30T02:50:02.120Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521003003-jk29sdkff",
+    "author": "Carla Mendes",
+    "name": "Service Level Agreement (Premium Tier)",
+    "description": "Defines uptime (99.9%), support response, and escalation matrix.",
+    "created": "2025-08-30T02:50:03.045Z",
+    "updated": "2025-08-30T02:50:03.045Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521004004-pqow44mmc",
+    "author": "David Kim",
+    "name": "Data Processing Addendum – GDPR",
+    "description": "Outlines processor/sub-processor obligations and data subject rights.",
+    "created": "2025-08-30T02:50:04.337Z",
+    "updated": "2025-08-30T02:50:04.337Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521005005-tuv55nnxz",
+    "author": "Emma Wilson",
+    "name": "Master Services Agreement 2025 Renewal",
+    "description": "Framework governing future statements of work and payment terms.",
+    "created": "2025-08-30T02:50:05.512Z",
+    "updated": "2025-08-30T02:50:05.512Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521006006-mnb77zzaq",
+    "author": "Frank Lopez",
+    "name": "Statement of Work #07 – Mobile App Enhancements",
+    "description": "Scope: push notifications module, performance tuning, analytics hooks.",
+    "created": "2025-08-30T02:50:06.604Z",
+    "updated": "2025-08-30T02:50:06.604Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521007007-asd90plkm",
+    "author": "Grace Patel",
+    "name": "Partner Referral Agreement",
+    "description": "Defines referral fees (12%), attribution window, and termination clause.",
+    "created": "2025-08-30T02:50:07.289Z",
+    "updated": "2025-08-30T02:50:07.289Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521008008-qwe11zxcv",
+    "author": "Henry Adams",
+    "name": "Professional Services Retainer Q4",
+    "description": "Pre-purchased 400 consulting hours; monthly burn-down reporting required.",
+    "created": "2025-08-30T02:50:08.933Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521009009-zxc22vvbb",
+    "author": "Isabella Rossi",
+    "name": "API Usage Agreement – External Integrator",
+    "description": "Rate limits, attribution requirements, and acceptable use provisions.",
+    "created": "2025-08-30T02:50:09.451Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521010010-lkj33mmnn",
+    "author": "Jack Thompson",
+    "name": "Supply Contract – Hardware Batch 3",
+    "description": "Covers delivery schedule, quality inspection thresholds, penalties.",
+    "created": "2025-08-30T02:50:10.842Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521011011-bnm44ppqq",
+    "author": "Karen Nguyen",
+    "name": "Confidentiality Agreement – Advisory Board",
+    "description": "Confidentiality of strategy decks and product prototypes.",
+    "created": "2025-08-30T02:50:11.306Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521012012-yui55hjkl",
+    "author": "Liam O'Connor",
+    "name": "Maintenance & Support Addendum",
+    "description": "Adds 24/7 priority support and quarterly security assessments.",
+    "created": "2025-08-30T02:50:12.677Z",
+    "updated": "2025-08-30T02:50:12.677Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521013013-hgf66qwer",
+    "author": "Maria Garcia",
+    "name": "Procurement Agreement – Cloud Resources",
+    "description": "Reserved compute capacity purchase with tiered discount schedule.",
+    "created": "2025-08-30T02:50:13.512Z",
+    "updated": "2025-08-30T02:50:13.512Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521014014-poi77asdf",
+    "author": "Noah Fischer",
+    "name": "Data Sharing Agreement – Analytics Consortium",
+    "description": "Defines anonymization standards, retention limits, breach notice SLAs.",
+    "created": "2025-08-30T02:50:14.921Z",
+    "updated": "2025-08-30T02:50:14.921Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521015015-vfr88ghjk",
+    "author": "Olivia Martin",
+    "name": "Marketing Co‑Branding Agreement",
+    "description": "Logo usage rules, approval workflow, quarterly pipeline targets.",
+    "created": "2025-08-30T02:50:15.284Z",
+    "updated": "2025-08-30T02:50:15.284Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521016016-dce99bnmm",
+    "author": "Patrick Lee",
+    "name": "Information Security Exhibit",
+    "description": "Encryption at rest/in transit, vulnerability remediation timelines.",
+    "created": "2025-08-30T02:50:16.640Z",
+    "updated": "2025-08-30T02:50:16.640Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521017017-mju10plko",
+    "author": "Quinn Harper",
+    "name": "Sub-Processor Notification Addendum",
+    "description": "Advance notice requirements and objection handling process.",
+    "created": "2025-08-30T02:50:17.905Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521018018-wsx11edcr",
+    "author": "Riley Evans",
+    "name": "Escrow Agreement – Source Code",
+    "description": "Release conditions tied to bankruptcy, support cessation, SLA breach.",
+    "created": "2025-08-30T02:50:18.377Z",
+    "updated": "2025-08-30T02:50:18.377Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521019019-nhy22ujmi",
+    "author": "Sophia Brown",
+    "name": "Renewal Amendment – MSA Pricing",
+    "description": "Extends term 12 months; adds 4% annual uplift cap clause.",
+    "created": "2025-08-30T02:50:19.744Z",
+    "is_deleted": false
+  },
+  {
+    "id": "contract-1756521020020-tgb33yhnj",
+    "author": "Thomas Müller",
+    "name": "Disaster Recovery & BCP Agreement",
+    "description": "RPO <= 15m, RTO <= 2h, semiannual failover test reporting obligations.",
+    "created": "2025-08-30T02:50:20.510Z",
+    "is_deleted": false
+  }
+]

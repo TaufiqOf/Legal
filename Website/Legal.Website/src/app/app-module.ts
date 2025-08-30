@@ -13,6 +13,7 @@ import { ContractListComponent } from './components/contract-list/contract-list.
 import { ContractFormComponent } from './components/contract-form/contract-form.component';
 import { ContractViewComponent } from './components/contract-view/contract-view.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { PaginationComponent } from './shared/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    PaginationComponent
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

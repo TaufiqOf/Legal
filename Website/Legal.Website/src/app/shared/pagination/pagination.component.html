@@ -1,0 +1,33 @@
+<nav *ngIf="totalPages > 1" aria-label="Pagination">
+  <ul class="pagination justify-content-center mb-0">
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <button class="page-link" (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+    </li>
+
+    <li class="page-item" *ngIf="showFirst()">
+      <button class="page-link" (click)="onPageChange(1)">1</button>
+    </li>
+
+    <li class="page-item disabled" *ngIf="showFirstEllipsis()">
+      <span class="page-link">...</span>
+    </li>
+
+    <ng-container *ngFor="let page of getPaginationArray()">
+      <li class="page-item" [class.active]="page === currentPage">
+        <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
+      </li>
+    </ng-container>
+
+    <li class="page-item disabled" *ngIf="showLastEllipsis()">
+      <span class="page-link">...</span>
+    </li>
+
+    <li class="page-item" *ngIf="showLast()">
+      <button class="page-link" (click)="onPageChange(totalPages)">{{ totalPages }}</button>
+    </li>
+
+    <li class="page-item" [class.disabled]="currentPage === totalPages">
+      <button class="page-link" (click)="onPageChange(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+    </li>
+  </ul>
+</nav>

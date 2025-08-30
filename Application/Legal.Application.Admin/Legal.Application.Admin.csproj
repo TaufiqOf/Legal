@@ -30,6 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Update="DataSeeder\admin.contract.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="DataSeeder\public.user.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

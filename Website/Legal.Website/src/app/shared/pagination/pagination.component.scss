@@ -1,0 +1,8 @@
+.page-item.active .page-link {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+
+.page-link:disabled, .page-item.disabled .page-link {
+  cursor: not-allowed;
+}
