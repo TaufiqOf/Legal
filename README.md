@@ -76,8 +76,36 @@ Legal.Api.Solution/
 ## 📋 Prerequisites
 - .NET 9 SDK
 - PostgreSQL 12+
-- (Optional) Docker / Docker Compose
+- (Optional Recommended) Docker / Docker Compose
 - VS 2022 / VS Code (VS recommended for integrated Docker + JS project)
+
+## 🖥️ Run with Docker in Visual Studio (Recommended)
+The solution is configured for Visual Studio container tools using Docker Compose (see docker-compose.dcproj).
+
+Steps:
+1. Install VS 2022 workloads: 
+   - ASP.NET and web development
+   - .NET + Container Development Tools
+   - JavaScript/TypeScript (for Website project)
+2. Open solution (.sln). Visual Studio detects Docker support from:
+   - Api/Legal.Api.WebApi.csproj (DockerDefaultTargetOS, DockerfileContext)
+   - Website/Legal.Website/Legal.Website.esproj (JavaScript project with Docker metadata)
+   - docker-compose.dcproj at root.
+3. Set Startup Project: choose the docker-compose project in Solution Explorer (right‑click Set as Startup). This launches all defined containers (API, Website, MigrationService, PostgreSQL, etc.).
+4. Configure Environment Variables: edit docker-compose.override.yml (or compose file) for:
+   - ConnectionStrings__Postgres
+   - ASPNETCORE_ENVIRONMENT=Development
+5. Press F5:
+   - Visual Studio builds container images (Fast mode if enabled) and starts containers.
+   - MigrationService runs first (if included) to apply migrations.
+6. Access:
+   - Frontend Website container (http://localhost:8080)
+   - API Swagger (http://localhost:4020/swagger)
+7. Debugging:
+   - API: Breakpoints work normally in .cs code.
+   - Website: Use browser dev tools; for live Angular development you can also run npm start outside container (Website project has StartupCommand npm start) and only keep API in Docker.
+8. Logs: Use View > Other Windows > Containers window in VS or run `docker compose logs -f` externally.
+9. Hot Reload: .NET Hot Reload applies to the API when using Fast (mounted) mode; for Angular use its dev server outside Docker during active UI work.
 
 ## ⚡ Quick Start (Local CLI)
 ### 1. Clone
@@ -106,34 +134,6 @@ dotnet run --project Api/Legal.Api.WebApi
 ```
 ### 6. Open Swagger
 https://localhost:5001/swagger
-
-## 🖥️ Run with Docker in Visual Studio
-The solution is configured for Visual Studio container tools using Docker Compose (see docker-compose.dcproj).
-
-Steps:
-1. Install VS 2022 workloads: 
-   - ASP.NET and web development
-   - .NET + Container Development Tools
-   - JavaScript/TypeScript (for Website project)
-2. Open solution (.sln). Visual Studio detects Docker support from:
-   - Api/Legal.Api.WebApi.csproj (DockerDefaultTargetOS, DockerfileContext)
-   - Website/Legal.Website/Legal.Website.esproj (JavaScript project with Docker metadata)
-   - docker-compose.dcproj at root.
-3. Set Startup Project: choose the docker-compose project in Solution Explorer (right‑click Set as Startup). This launches all defined containers (API, Website, MigrationService, PostgreSQL, etc.).
-4. Configure Environment Variables: edit docker-compose.override.yml (or compose file) for:
-   - ConnectionStrings__Postgres
-   - ASPNETCORE_ENVIRONMENT=Development
-5. Press F5:
-   - Visual Studio builds container images (Fast mode if enabled) and starts containers.
-   - MigrationService runs first (if included) to apply migrations.
-6. Access:
-   - Frontend Website container (e.g., http://localhost:8080)
-   - API Swagger (e.g., http://localhost:4020/swagger)
-7. Debugging:
-   - API: Breakpoints work normally in .cs code.
-   - Website: Use browser dev tools; for live Angular development you can also run npm start outside container (Website project has StartupCommand npm start) and only keep API in Docker.
-8. Logs: Use View > Other Windows > Containers window in VS or run `docker compose logs -f` externally.
-9. Hot Reload: .NET Hot Reload applies to the API when using Fast (mounted) mode; for Angular use its dev server outside Docker during active UI work.
 
 ## 🧩 Modules
 Current:
