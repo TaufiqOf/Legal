@@ -1,4 +1,3 @@
-using FFMpegCore;
 using Legal.Api.WebApi.DataSeeding;
 using Legal.Api.WebApi.DelegateHandler;
 using Legal.Application.Admin;
@@ -6,8 +5,8 @@ using Legal.Service.Infrastructure.Interface;
 using Legal.Service.Infrastructure.Model;
 using Legal.Service.Infrastructure.Services;
 using Legal.Service.Repository;
-using System.Reflection;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,7 +78,6 @@ builder.Services.AddCors(options =>
         }
     });
 });
-
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {

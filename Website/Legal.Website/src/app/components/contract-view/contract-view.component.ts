@@ -18,7 +18,7 @@ export class ContractViewComponent implements OnInit {
     private contractService: ContractService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

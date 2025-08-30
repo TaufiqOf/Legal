@@ -14,15 +14,13 @@
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
               <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  class="form-control"
-                  formControlName="name"
-                  placeholder="Your full name"
-                  [class.is-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
-                  autocomplete="name"
-                />
+                <input type="text"
+                       id="name"
+                       class="form-control"
+                       formControlName="name"
+                       placeholder="Your full name"
+                       [class.is-invalid]="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+                       autocomplete="name" />
                 <div class="invalid-feedback" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
                   <div *ngIf="registerForm.get('name')?.errors?.['required']">Name is required</div>
                   <div *ngIf="registerForm.get('name')?.errors?.['minlength']">Name must be at least 2 characters</div>
@@ -31,15 +29,13 @@
 
               <div class="mb-3">
                 <label for="userName" class="form-label">Username</label>
-                <input
-                  type="text"
-                  id="userName"
-                  class="form-control"
-                  formControlName="userName"
-                  placeholder="Choose a username"
-                  [class.is-invalid]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
-                  autocomplete="username"
-                />
+                <input type="text"
+                       id="userName"
+                       class="form-control"
+                       formControlName="userName"
+                       placeholder="Choose a username"
+                       [class.is-invalid]="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
+                       autocomplete="username" />
                 <div class="invalid-feedback" *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched">
                   <div *ngIf="registerForm.get('userName')?.errors?.['required']">Username is required</div>
                   <div *ngIf="registerForm.get('userName')?.errors?.['minlength']">At least 3 characters</div>
@@ -48,15 +44,13 @@
 
               <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  class="form-control"
-                  formControlName="password"
-                  placeholder="Create a password"
-                  [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
-                  autocomplete="new-password"
-                />
+                <input type="password"
+                       id="password"
+                       class="form-control"
+                       formControlName="password"
+                       placeholder="Create a password"
+                       [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                       autocomplete="new-password" />
                 <div class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
                   <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</div>
                   <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Minimum 6 characters</div>
@@ -65,15 +59,13 @@
 
               <div class="mb-4">
                 <label for="confirmPassword" class="form-label">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  class="form-control"
-                  formControlName="confirmPassword"
-                  placeholder="Re-enter password"
-                  [class.is-invalid]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
-                  autocomplete="new-password"
-                />
+                <input type="password"
+                       id="confirmPassword"
+                       class="form-control"
+                       formControlName="confirmPassword"
+                       placeholder="Re-enter password"
+                       [class.is-invalid]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
+                       autocomplete="new-password" />
                 <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
                   <div *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirmation required</div>
                   <div *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</div>
@@ -83,11 +75,9 @@
               <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
 
               <div class="d-grid gap-2">
-                <button
-                  type="submit"
-                  class="btn btn-success btn-lg"
-                  [disabled]="loading || registerForm.invalid"
-                >
+                <button type="submit"
+                        class="btn btn-success btn-lg"
+                        [disabled]="loading || registerForm.invalid">
                   <span class="spinner-border spinner-border-sm me-2" *ngIf="loading" aria-hidden="true"></span>
                   {{ loading ? 'Creating Account...' : 'Create Account' }}
                 </button>

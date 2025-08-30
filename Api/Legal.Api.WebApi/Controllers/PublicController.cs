@@ -49,7 +49,7 @@ namespace Legal.Api.WebApi.Controllers
         /// - Getting public content or documents
         /// - Executing guest-accessible queries
         /// - Health check operations
-        /// 
+        ///
         /// The operation will only succeed if the target handler is marked with [AllowAnonymous] attribute.
         /// Operations requiring authentication will throw UnauthorizedAccessException.
         /// </remarks>
@@ -101,12 +101,12 @@ namespace Legal.Api.WebApi.Controllers
         /// - Company logos or public images
         /// - Public reports or data exports
         /// - Terms of service or privacy policy documents
-        /// 
+        ///
         /// The file access will only succeed if:
         /// 1. The target query handler is marked with [AllowAnonymous] attribute
         /// 2. The file is marked as publicly accessible in the system
         /// 3. The file exists and is not deleted
-        /// 
+        ///
         /// The response includes appropriate Content-Type headers and enables file download in browsers.
         /// Large files are streamed to optimize memory usage.
         /// </remarks>

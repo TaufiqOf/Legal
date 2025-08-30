@@ -14,7 +14,7 @@ export class ContractListComponent implements OnInit {
   contracts: Contract[] = [];
   loading = false;
   error = '';
-  
+
   // Pagination
   currentPage = 1;
   pageSize = 10;
@@ -25,7 +25,7 @@ export class ContractListComponent implements OnInit {
     private contractService: ContractService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadContracts();
@@ -91,12 +91,11 @@ export class ContractListComponent implements OnInit {
     const pages: number[] = [];
     const startPage = Math.max(1, this.currentPage - 2);
     const endPage = Math.min(this.totalPages, this.currentPage + 2);
-    
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
-    
+
     return pages;
   }
 }
-

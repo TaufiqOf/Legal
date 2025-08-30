@@ -6,16 +6,19 @@
   padding: 2rem 1rem;
 }
 
-.auth-page .card {
-  width: 100%;
-  max-width: 560px; /* slightly wider for 4 fields */
-  min-width: 320px;
-  margin: 0 auto;
-  flex: 0 1 560px; /* prevent over shrinking */
-}
+  .auth-page .card {
+    width: 100%;
+    max-width: 560px; /* slightly wider for 4 fields */
+    min-width: 320px;
+    margin: 0 auto;
+    flex: 0 1 560px; /* prevent over shrinking */
+  }
 
-/* Prevent Bootstrap column from forcing % shrink on large screens */
-.auth-page .col-md-6.col-lg-5 { flex: 0 0 auto; width: auto; }
+  /* Prevent Bootstrap column from forcing % shrink on large screens */
+  .auth-page .col-md-6.col-lg-5 {
+    flex: 0 0 auto;
+    width: auto;
+  }
 
 .card {
   border: none;
@@ -32,10 +35,10 @@
   font-size: 1rem;
 }
 
-.form-control:focus {
-  border-color: #198754;
-  box-shadow: 0 0 0 0.2rem rgba(25,135,84,.25);
-}
+  .form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.2rem rgba(25,135,84,.25);
+  }
 
 .btn-success {
   background-color: #198754;
@@ -45,10 +48,10 @@
   font-weight: 500;
 }
 
-.btn-success:hover {
-  background-color: #157347;
-  border-color: #146c43;
-}
+  .btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+  }
 
 .alert {
   border-radius: 0.5rem;

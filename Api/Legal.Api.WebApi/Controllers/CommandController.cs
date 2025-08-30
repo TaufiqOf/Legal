@@ -78,7 +78,7 @@ public class CommandController : ControllerBase
     /// The request must be sent as multipart/form-data with:
     /// - data: JSON string containing the command request
     /// - files: One or more files to upload
-    /// 
+    ///
     /// Example form data:
     /// - data: {"RequestName": "UploadDocument", "Parameter": {"DocumentType": "Contract"}}
     /// - file: [attached files]

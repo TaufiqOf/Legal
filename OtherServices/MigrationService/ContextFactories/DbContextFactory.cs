@@ -1,5 +1,4 @@
-﻿using Legal.MigrationService;
-using Legal.Service.Infrastructure.Model;
+﻿using Legal.Service.Infrastructure.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics; // added for warning suppression

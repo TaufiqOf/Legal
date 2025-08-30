@@ -11,7 +11,7 @@ export class TestService {
     private authService: AuthService,
     private contractService: ContractService,
     private apiService: ApiService
-  ) {}
+  ) { }
 
   /**
    * Test the API connection by checking available commands

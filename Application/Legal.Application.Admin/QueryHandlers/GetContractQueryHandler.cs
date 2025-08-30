@@ -10,9 +10,9 @@ namespace Legal.Application.Admin.QueryHandlers;
 public class GetContractQueryHandler : AQueryHandler<IdParameterModel, ContractResponseModel>
 {
     public GetContractQueryHandler(
-        ILogger<GetContractQueryHandler> logger, 
-        RequestHandler requestHandler, 
-        IContractService contractService) : 
+        ILogger<GetContractQueryHandler> logger,
+        RequestHandler requestHandler,
+        IContractService contractService) :
         base(logger, requestHandler)
     {
         ContractService = contractService;

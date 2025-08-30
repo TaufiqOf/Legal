@@ -1,6 +1,7 @@
 ﻿using Legal.Service.Infrastructure.Interface;
 
 namespace Legal.Shared.SharedModel.ResponseModel.Contract;
+
 public class ContractResponseModel : IResponseModel
 {
     public string Id { get; set; } = default!;

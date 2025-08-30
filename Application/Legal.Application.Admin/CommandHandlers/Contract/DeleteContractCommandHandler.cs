@@ -1,5 +1,4 @@
-﻿using Legal.Application.Admin.Dtos;
-using Legal.Application.Admin.Infrastructure;
+﻿using Legal.Application.Admin.Infrastructure;
 using Legal.Service.Infrastructure.Model;
 using Legal.Service.Infrastructure.Services;
 using Legal.Shared.SharedModel.ParameterModel;
@@ -8,7 +7,6 @@ using Legal.Shared.SharedModel.ResponseModel;
 namespace Legal.Application.Admin.CommandHandlers.Contract;
 
 [TokenAuthorize]
-
 public class DeleteContractCommandHandler : ACommandHandler<IdParameterModel, EmptyResponseModel>
 {
     public DeleteContractCommandHandler(

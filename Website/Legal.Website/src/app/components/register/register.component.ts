@@ -19,7 +19,7 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
@@ -75,4 +75,3 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
-

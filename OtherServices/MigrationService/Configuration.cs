@@ -1,5 +1,5 @@
-using System.Reflection;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Legal.MigrationService;
 

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Legal.Shared.SharedModel.ParameterModel;
 using Legal.Shared.SharedModel.ParameterModel.Contract;
 
 namespace Legal.Shared.SharedModel.Validator;

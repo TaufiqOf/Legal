@@ -27,17 +27,17 @@
   color: #0d6efd;
 }
 
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
+  .breadcrumb-item a:hover {
+    text-decoration: underline;
+  }
 
 .btn-group .btn {
   margin-left: 0.25rem;
 }
 
-.btn-group .btn:first-child {
-  margin-left: 0;
-}
+  .btn-group .btn:first-child {
+    margin-left: 0;
+  }
 
 .spinner-border {
   width: 3rem;
@@ -64,6 +64,6 @@
   margin-bottom: 0.5rem;
 }
 
-.row:last-child {
-  margin-bottom: 0;
-}
+  .row:last-child {
+    margin-bottom: 0;
+  }

@@ -6,17 +6,20 @@
   padding: 2rem 1rem;
 }
 
-/* Constrain width with a stable max but allow comfortable growth */
-.auth-page .card {
-  width: 100%;
-  max-width: 520px; /* fixed comfortable width */
-  min-width: 320px;
-  margin: 0 auto;
-  flex: 0 1 520px; /* do not shrink below min-width */
-}
+  /* Constrain width with a stable max but allow comfortable growth */
+  .auth-page .card {
+    width: 100%;
+    max-width: 520px; /* fixed comfortable width */
+    min-width: 320px;
+    margin: 0 auto;
+    flex: 0 1 520px; /* do not shrink below min-width */
+  }
 
-/* Prevent nested Bootstrap column from re‑shrinking on larger viewports */
-.auth-page .col-md-6.col-lg-4 { flex: 0 0 auto; width: auto; }
+  /* Prevent nested Bootstrap column from re‑shrinking on larger viewports */
+  .auth-page .col-md-6.col-lg-4 {
+    flex: 0 0 auto;
+    width: auto;
+  }
 
 /* Existing styles */
 .card {
@@ -47,10 +50,10 @@
   font-size: 1rem;
 }
 
-.form-control:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
+  .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
 
 .btn-primary {
   background-color: #0d6efd;
@@ -60,10 +63,10 @@
   font-weight: 500;
 }
 
-.btn-primary:hover {
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
-}
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+  }
 
 .alert {
   border-radius: 0.5rem;
@@ -81,7 +84,7 @@
   .auth-page {
     padding: 1rem;
   }
-  
+
   .card-header,
   .card-body,
   .card-footer {

@@ -2,9 +2,9 @@
 using Legal.Application.Admin.Dtos;
 using Legal.Application.Admin.Infrastructure;
 using Legal.Service.Infrastructure.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace Legal.Application.Admin.Services.Contract;
+
 public class ContractService : IContractService
 {
     public ContractService(
@@ -22,7 +22,7 @@ public class ContractService : IContractService
     public async Task<bool> Delete(string id, CancellationToken cancellationToken)
     {
         var existingContract = await Repository.Get(id, cancellationToken);
-        if(existingContract == null)
+        if (existingContract == null)
         {
             throw new KeyNotFoundException("Contract not found");
         }

@@ -9,7 +9,7 @@ import { Contract, ContractParameterModel, PagedResponse, GetItemsParameterModel
 export class ContractService {
   private readonly moduleName = 'ADMIN';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   private unwrap<T>(raw: any): T {
     // Backend returns either { data: ... } or { result: ... }
@@ -36,9 +36,9 @@ export class ContractService {
         return {
           data: data as Contract[],
           count: inner.count ?? inner.Count ?? data.length ?? 0,
-            pageNumber: inner.pageNumber ?? inner.PageNumber ?? 1,
-            pageSize: inner.pageSize ?? inner.PageSize ?? pageSize,
-            totalPage: inner.totalPage ?? inner.TotalPage ?? 0
+          pageNumber: inner.pageNumber ?? inner.PageNumber ?? 1,
+          pageSize: inner.pageSize ?? inner.PageSize ?? pageSize,
+          totalPage: inner.totalPage ?? inner.TotalPage ?? 0
         } as PagedResponse<Contract>;
       })
     );

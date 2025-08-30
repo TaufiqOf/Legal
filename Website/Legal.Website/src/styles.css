@@ -25,9 +25,9 @@ body {
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
 
 /* Responsive table */
 .table-responsive {

@@ -11,9 +11,9 @@ namespace Legal.Application.Admin.QueryHandlers;
 public class GetByPagedContractQueryHandler : AQueryHandler<GetItemsParameterModel, PagedResponseModel<ContractResponseModel>>
 {
     public GetByPagedContractQueryHandler(
-        ILogger<GetByPagedContractQueryHandler> logger, 
+        ILogger<GetByPagedContractQueryHandler> logger,
         RequestHandler requestHandler,
-        IContractService contractService) 
+        IContractService contractService)
         : base(logger, requestHandler)
     {
         Logger = logger;
@@ -30,7 +30,7 @@ public class GetByPagedContractQueryHandler : AQueryHandler<GetItemsParameterMod
         var responseModels = MapperHelper.Map<IEnumerable<ContractResponseModel>>(result.Item1);
         var totalCount = result.Item2;
         var pagedResponse = new PagedResponseModel<ContractResponseModel>();
-        pagedResponse.Add(responseModels,totalCount,parameter.PageNumber,parameter.PageSize);
+        pagedResponse.Add(responseModels, totalCount, parameter.PageNumber, parameter.PageSize);
         return pagedResponse;
     }
 }

@@ -23,9 +23,9 @@
   color: #0d6efd;
 }
 
-.breadcrumb-item a:hover {
-  text-decoration: underline;
-}
+  .breadcrumb-item a:hover {
+    text-decoration: underline;
+  }
 
 .spinner-border {
   width: 3rem;

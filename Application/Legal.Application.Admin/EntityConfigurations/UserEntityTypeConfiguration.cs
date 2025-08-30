@@ -1,4 +1,3 @@
-using Legal.Application.Admin.Dtos;
 using Legal.Service.Infrastructure.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

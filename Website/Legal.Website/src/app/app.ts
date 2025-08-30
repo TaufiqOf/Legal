@@ -15,7 +15,7 @@ export class App {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
