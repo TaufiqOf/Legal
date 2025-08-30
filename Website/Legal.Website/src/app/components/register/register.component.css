@@ -1,3 +1,22 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-page .card {
+  width: 100%;
+  max-width: 560px; /* slightly wider for 4 fields */
+  min-width: 320px;
+  margin: 0 auto;
+  flex: 0 1 560px; /* prevent over shrinking */
+}
+
+/* Prevent Bootstrap column from forcing % shrink on large screens */
+.auth-page .col-md-6.col-lg-5 { flex: 0 0 auto; width: auto; }
+
 .card {
   border: none;
   border-radius: 10px;
@@ -7,14 +26,23 @@
   border-radius: 10px 10px 0 0 !important;
 }
 
+.form-control {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}
+
 .form-control:focus {
   border-color: #198754;
-  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(25,135,84,.25);
 }
 
 .btn-success {
   background-color: #198754;
   border-color: #198754;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
 }
 
 .btn-success:hover {
@@ -22,10 +50,26 @@
   border-color: #146c43;
 }
 
-a {
-  text-decoration: none;
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
 }
 
-a:hover {
-  text-decoration: underline;
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+@media (max-width: 576px) {
+  .auth-page {
+    padding: 1rem;
+  }
+
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
 }

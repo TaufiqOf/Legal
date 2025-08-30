@@ -1,3 +1,24 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center horizontally */
+  padding: 2rem 1rem;
+}
+
+/* Constrain width with a stable max but allow comfortable growth */
+.auth-page .card {
+  width: 100%;
+  max-width: 520px; /* fixed comfortable width */
+  min-width: 320px;
+  margin: 0 auto;
+  flex: 0 1 520px; /* do not shrink below min-width */
+}
+
+/* Prevent nested Bootstrap column from re‑shrinking on larger viewports */
+.auth-page .col-md-6.col-lg-4 { flex: 0 0 auto; width: auto; }
+
+/* Existing styles */
 .card {
   border: none;
   border-radius: 10px;
@@ -5,6 +26,25 @@
 
 .card-header {
   border-radius: 10px 10px 0 0 !important;
+}
+
+.brand-logo {
+  margin-bottom: 1rem;
+}
+
+.card-body {
+  padding: 1.5rem 2rem 2rem;
+}
+
+.card-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.form-control {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
 }
 
 .form-control:focus {
@@ -15,6 +55,9 @@
 .btn-primary {
   background-color: #0d6efd;
   border-color: #0d6efd;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
 }
 
 .btn-primary:hover {
@@ -22,10 +65,27 @@
   border-color: #0a58ca;
 }
 
-a {
-  text-decoration: none;
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 0.875rem;
 }
 
-a:hover {
-  text-decoration: underline;
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .auth-page {
+    padding: 1rem;
+  }
+  
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
 }

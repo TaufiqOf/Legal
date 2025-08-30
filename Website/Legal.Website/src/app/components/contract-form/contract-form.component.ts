@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ContractService } from '../../services/contract.service';
-import { AuthService } from '../../services/auth.service';
 import { Contract } from '../../models/contract.model';
 
 @Component({
@@ -21,7 +20,6 @@ export class ContractFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private contractService: ContractService,
-    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -115,13 +113,5 @@ export class ContractFormComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/contracts']);
-  }
-
-  getCurrentUser() {
-    return this.authService.getCurrentUser();
-  }
-
-  logout(): void {
-    this.authService.logout();
   }
 }

@@ -1,1 +1,69 @@
-<router-outlet></router-outlet>
+<!-- Main Layout for Authenticated Users -->
+<div *ngIf="isAuthenticated() && !isLoginPage()" class="app-layout">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/contracts">
+        <i class="bi bi-file-text"></i> Legal System
+      </a>
+      
+      <button class="navbar-toggler" type="button" (click)="isNavCollapsed = !isNavCollapsed" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" [class.show]="!isNavCollapsed" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/contracts" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="bi bi-file-earmark-text"></i> Contracts
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/contracts/create" routerLinkActive="active">
+              <i class="bi bi-plus-circle"></i> New Contract
+            </a>
+          </li>
+        </ul>
+        
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown" [class.show]="userMenuOpen" (click)="userMenuOpen = !userMenuOpen">
+            <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button" aria-expanded="userMenuOpen">
+              <i class="bi bi-person-circle"></i> {{ getCurrentUser()?.name || 'User' }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" [class.show]="userMenuOpen" aria-labelledby="navbarDropdown">
+              <li>
+                <a class="dropdown-item" href="#" (click)="logout(); $event.preventDefault();">
+                  <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer bg-light mt-auto py-3">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <span class="text-muted">© 2024 Legal System. All rights reserved.</span>
+        </div>
+        <div class="col-md-6 text-end">
+          <span class="text-muted">Version 1.0.0</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- Login/Register Pages (No Layout) -->
+<div *ngIf="!isAuthenticated() || isLoginPage()" class="auth-layout">
+  <router-outlet></router-outlet>
+</div>

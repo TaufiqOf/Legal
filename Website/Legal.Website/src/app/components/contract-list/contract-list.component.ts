@@ -87,14 +87,6 @@ export class ContractListComponent implements OnInit {
     this.router.navigate(['/contracts/create']);
   }
 
-  logout(): void {
-    this.authService.logout();
-  }
-
-  getCurrentUser() {
-    return this.authService.getCurrentUser();
-  }
-
   getPaginationArray(): number[] {
     const pages: number[] = [];
     const startPage = Math.max(1, this.currentPage - 2);

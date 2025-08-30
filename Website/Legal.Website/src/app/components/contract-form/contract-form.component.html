@@ -1,33 +1,10 @@
-<div class="container-fluid py-4">
-  <!-- Header -->
+<div class="container-fluid">
+  <!-- Page Header -->
   <div class="row mb-4">
     <div class="col">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">{{ isEditMode ? 'Edit Contract' : 'Create New Contract' }}</h2>
-        <div class="d-flex align-items-center">
-          <span class="me-3">Welcome, {{ getCurrentUser()?.name }}</span>
-          <button class="btn btn-outline-secondary me-2" (click)="logout()">
-            Logout
-          </button>
-        </div>
-      </div>
+      <h2 class="mb-0">{{ isEditMode ? 'Edit Contract' : 'Create New Contract' }}</h2>
     </div>
   </div>
-
-  <!-- Navigation -->
-  <div class="row mb-3">
-    <div class="col">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">
-            <a href="#" (click)="cancel()">Contracts</a>
-          </li>
-          <li class="breadcrumb-item active">{{ isEditMode ? 'Edit' : 'Create' }}</li>
-        </ol>
-      </nav>
-    </div>
-  </div>
-
   <!-- Error Message -->
   <div class="alert alert-danger" *ngIf="error">
     {{ error }}
@@ -51,14 +28,12 @@
           <form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="name" class="form-label">Contract Name <span class="text-danger">*</span></label>
-              <input
-                type="text"
-                class="form-control"
-                id="name"
-                formControlName="name"
-                placeholder="Enter contract name"
-                [class.is-invalid]="contractForm.get('name')?.invalid && contractForm.get('name')?.touched"
-              />
+              <input type="text"
+                     class="form-control"
+                     id="name"
+                     formControlName="name"
+                     placeholder="Enter contract name"
+                     [class.is-invalid]="contractForm.get('name')?.invalid && contractForm.get('name')?.touched" />
               <div class="invalid-feedback" *ngIf="contractForm.get('name')?.invalid && contractForm.get('name')?.touched">
                 <div *ngIf="contractForm.get('name')?.errors?.['required']">Contract name is required</div>
                 <div *ngIf="contractForm.get('name')?.errors?.['minlength']">Contract name must be at least 3 characters</div>
@@ -67,14 +42,12 @@
 
             <div class="mb-3">
               <label for="author" class="form-label">Author <span class="text-danger">*</span></label>
-              <input
-                type="text"
-                class="form-control"
-                id="author"
-                formControlName="author"
-                placeholder="Enter author name"
-                [class.is-invalid]="contractForm.get('author')?.invalid && contractForm.get('author')?.touched"
-              />
+              <input type="text"
+                     class="form-control"
+                     id="author"
+                     formControlName="author"
+                     placeholder="Enter author name"
+                     [class.is-invalid]="contractForm.get('author')?.invalid && contractForm.get('author')?.touched" />
               <div class="invalid-feedback" *ngIf="contractForm.get('author')?.invalid && contractForm.get('author')?.touched">
                 <div *ngIf="contractForm.get('author')?.errors?.['required']">Author is required</div>
                 <div *ngIf="contractForm.get('author')?.errors?.['minlength']">Author name must be at least 2 characters</div>
@@ -83,14 +56,12 @@
 
             <div class="mb-4">
               <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
-              <textarea
-                class="form-control"
-                id="description"
-                formControlName="description"
-                rows="6"
-                placeholder="Enter contract description"
-                [class.is-invalid]="contractForm.get('description')?.invalid && contractForm.get('description')?.touched"
-              ></textarea>
+              <textarea class="form-control"
+                        id="description"
+                        formControlName="description"
+                        rows="6"
+                        placeholder="Enter contract description"
+                        [class.is-invalid]="contractForm.get('description')?.invalid && contractForm.get('description')?.touched"></textarea>
               <div class="invalid-feedback" *ngIf="contractForm.get('description')?.invalid && contractForm.get('description')?.touched">
                 <div *ngIf="contractForm.get('description')?.errors?.['required']">Description is required</div>
                 <div *ngIf="contractForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters</div>
@@ -99,21 +70,17 @@
             </div>
 
             <div class="d-flex gap-2">
-              <button
-                type="submit"
-                class="btn btn-primary"
-                [disabled]="loading || contractForm.invalid"
-              >
+              <button type="submit"
+                      class="btn btn-primary"
+                      [disabled]="loading || contractForm.invalid">
                 <span class="spinner-border spinner-border-sm me-2" *ngIf="loading"></span>
                 {{ loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Contract' : 'Create Contract') }}
               </button>
-              
-              <button
-                type="button"
-                class="btn btn-secondary"
-                (click)="cancel()"
-                [disabled]="loading"
-              >
+
+              <button type="button"
+                      class="btn btn-secondary"
+                      (click)="cancel()"
+                      [disabled]="loading">
                 Cancel
               </button>
             </div>
@@ -131,10 +98,10 @@
         <div class="card-body">
           <h6>Contract Name</h6>
           <p class="small">Choose a clear, descriptive name for your contract that will help identify it later.</p>
-          
+
           <h6>Author</h6>
           <p class="small">Enter the name of the person or entity responsible for creating this contract.</p>
-          
+
           <h6>Description</h6>
           <p class="small">Provide a comprehensive description of the contract including:</p>
           <ul class="small">
