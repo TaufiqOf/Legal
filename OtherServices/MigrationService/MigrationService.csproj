@@ -5,8 +5,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Legel.$(MSBuildProjectName)</AssemblyName>
-    <RootNamespace>Legel.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>Legal.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Legal.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <UserSecretsId>23bf196b-40ae-42a9-b1c3-57ab68644b80</UserSecretsId>
@@ -34,7 +34,6 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.8" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.8" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.8" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 		<PackageReference Include="Npgsql" Version="9.0.3" />
 	</ItemGroup>

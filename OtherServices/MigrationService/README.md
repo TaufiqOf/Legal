@@ -4,7 +4,7 @@
 
 The Migration Service is a console application designed to manage database migrations and schema updates for the Legal API System. This service provides a command-line interface for applying Entity Framework Core migrations across multiple database contexts and modules.
 
-## ??? Architecture
+## ?? Architecture
 
 This migration service implements:
 - **Command Line Interface** - Parameter-driven migration execution
@@ -98,7 +98,7 @@ MigrationService.exe --data-db "Host=localhost;Database=LegalData;Username=user;
 | `--update-database` | Auto-confirm migration (y/n) | `--update-database "y"` |
 | `--context-number` | Context selection (-1=all, number=specific) | `--context-number "1"` |
 
-## ??? Database Context Discovery
+## ?? Database Context Discovery
 
 ### Automatic Discovery
 The service automatically discovers database contexts by:
@@ -230,10 +230,10 @@ foreach (var contextType in selectedContexts)
 The service includes Docker support for containerized migrations:
 
 ```dockerfile
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 COPY ["OtherServices/MigrationService/MigrationService.csproj", "OtherServices/MigrationService/"]
 RUN dotnet restore "OtherServices/MigrationService/MigrationService.csproj"
@@ -247,7 +247,7 @@ RUN dotnet publish "MigrationService.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Legel.MigrationService.dll"]
+ENTRYPOINT ["dotnet", "Legal.MigrationService.dll"]
 ```
 
 ### Docker Usage
@@ -323,8 +323,8 @@ MigrationService.exe --auth-db "Host=localhost;Database=postgres;Username=postgr
 - **CommandLineParser** (2.9.1) - Command line argument parsing
 - **dbup-postgresql** (5.0.40) - Database migration framework
 - **DistributedLock.Postgres** (1.2.1) - Distributed locking
-- **Microsoft.EntityFrameworkCore.Design** (8.0.13) - EF Core design tools
-- **Npgsql.EntityFrameworkCore.PostgreSQL** (8.0.11) - PostgreSQL provider
+- **Microsoft.EntityFrameworkCore.Design** (9.0.8) - EF Core design tools
+- **Npgsql.EntityFrameworkCore.PostgreSQL** (9.0.4) - PostgreSQL provider
 
 ### Project References
 - **Legal.Application.Admin** - Admin module for context access

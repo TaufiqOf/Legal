@@ -12,8 +12,11 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Build.props", "."]
 COPY ["OtherServices/MigrationService/MigrationService.csproj", "OtherServices/MigrationService/"]
+COPY ["Application/Legal.Application.Admin/Legal.Application.Admin.csproj", "Application/Legal.Application.Admin/"]
 COPY ["Service/Legal.Service.Infrastructure/Legal.Service.Infrastructure.csproj", "Service/Legal.Service.Infrastructure/"]
+COPY ["Service/Legal.Service.Repository/Legal.Service.Repository.csproj", "Service/Legal.Service.Repository/"]
 COPY ["Service/Legal.Service.Helper/Legal.Service.Helper.csproj", "Service/Legal.Service.Helper/"]
+COPY ["Shared/Legal.Shared.SharedModel/Legal.Shared.SharedModel.csproj", "Shared/Legal.Shared.SharedModel/"]
 RUN dotnet restore "./OtherServices/MigrationService/MigrationService.csproj"
 COPY . .
 WORKDIR "/src/OtherServices/MigrationService"
@@ -28,4 +31,5 @@ RUN dotnet publish "./MigrationService.csproj" -c $BUILD_CONFIGURATION -o /app/p
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Legel.MigrationService.dll"]
+# Explicit entrypoint so docker-compose can pass only arguments (no duplicate 'dotnet')
+ENTRYPOINT ["dotnet", "Legal.MigrationService.dll"]

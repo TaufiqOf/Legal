@@ -10,7 +10,7 @@ public interface IContractService
 
     Task<IEnumerable<ContractDto>> GetAll(CancellationToken cancellationToken);
     
-    Task<ContractDto> Get(ContractDto contract, CancellationToken cancellationToken);
+    Task<ContractDto> Get(string id, CancellationToken cancellationToken);
 
     Task<(IEnumerable<ContractDto>, int)> Paged(int pageNumber,int pageSize, CancellationToken cancellationToken);
 

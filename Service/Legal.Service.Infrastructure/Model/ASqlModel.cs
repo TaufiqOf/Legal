@@ -1,7 +1,6 @@
-﻿namespace Legal.Service.Infrastructure.Model
+namespace Legal.Service.Infrastructure.Model;
+
+public abstract class ASqlModel
 {
-    public abstract class ASqlModel
-    {
-        public virtual string Sql { get; set; }
-    }
+    public virtual string Sql { get; set; }
 }

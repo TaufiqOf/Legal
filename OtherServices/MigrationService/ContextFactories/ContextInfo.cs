@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace Legel.MigrationService.ContextFactories
+namespace Legal.MigrationService.ContextFactories;
+
+public class ContextInfo
 {
-    public class ContextInfo
-    {
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public DbContext DbContext { get; set; }
-    }
+    public DbContext DbContext { get; set; }
 }

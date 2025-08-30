@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Api/Legal.Api.WebApi/Dockerfile
   Legal.service.migration:
-    image: ${DOCKER_REGISTRY-}legalmigration
+    image: ${DOCKER_REGISTRY-}migration
     build:
       context: .
       dockerfile: OtherServices/MigrationService/Dockerfile

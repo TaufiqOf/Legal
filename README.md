@@ -1,10 +1,10 @@
-# Legal API System
+﻿# Legal API System
 
 ## Overview
 
-The Legal API System is a modular .NET 8 web application built using Clean Architecture principles. It provides a robust foundation for legal document management and processing with a modular design that supports multiple business domains.
+The Legal API System is a modular .NET 9 web application built using Clean Architecture principles. It provides a robust foundation for legal document management and processing with a modular design that supports multiple business domains.
 
-## ??? Architecture
+## ⚙️ Architecture
 
 This solution follows Clean Architecture and Domain-Driven Design (DDD) principles with the following layers:
 
@@ -14,7 +14,7 @@ This solution follows Clean Architecture and Domain-Driven Design (DDD) principl
 - **Shared Layer** (`Legal.Shared.SharedModel`) - Common models and utilities
 - **Migration Service** (`MigrationService`) - Database migration and seeding
 
-## ?? Features
+## 🚀 Features
 
 - **Modular Architecture** - Support for multiple business modules (Admin, Shop, Chat)
 - **CQRS Pattern** - Command and Query separation with handlers
@@ -26,27 +26,27 @@ This solution follows Clean Architecture and Domain-Driven Design (DDD) principl
 - **Image Processing** - SixLabors.ImageSharp for image manipulation
 - **Video Processing** - FFMpegCore for video operations
 
-## ?? Project Structure
+## 📁 Project Structure
 
 ```
 Legal.Api.Solution/
-??? Api/
-?   ??? Legal.Api.WebApi/              # Main Web API project
-??? Application/
-?   ??? Legal.Application.Admin/       # Admin module business logic
-??? Service/
-?   ??? Legal.Service.Infrastructure/  # Core infrastructure services
-?   ??? Legal.Service.Repository/      # Data access layer
-?   ??? Legal.Service.Helper/          # Utility helpers
-??? Shared/
-?   ??? Legal.Shared.SharedModel/      # Shared models and DTOs
-??? OtherServices/
-    ??? MigrationService/              # Database migration service
+├── Api/
+│   └── Legal.Api.WebApi/              # Main Web API project
+├── Application/
+│   └── Legal.Application.Admin/       # Admin module business logic
+├── Service/
+│   ├── Legal.Service.Infrastructure/  # Core infrastructure services
+│   ├── Legal.Service.Repository/      # Data access layer
+│   └── Legal.Service.Helper/          # Utility helpers
+├── Shared/
+│   └── Legal.Shared.SharedModel/      # Shared models and DTOs
+└── OtherServices/
+    └── MigrationService/              # Database migration service
 ```
 
-## ??? Technologies
+## 🛠️ Technologies
 
-- **.NET 8** - Latest .NET framework
+- **.NET 9** - Latest .NET framework
 - **ASP.NET Core** - Web API framework
 - **Entity Framework Core** - ORM with PostgreSQL
 - **AutoMapper** - Object-to-object mapping
@@ -56,14 +56,14 @@ Legal.Api.Solution/
 - **Swagger/OpenAPI** - API documentation
 - **Docker** - Containerization
 
-## ?? Prerequisites
+## 📋 Prerequisites
 
-- .NET 8 SDK
+- .NET 9 SDK
 - PostgreSQL 12+
 - Docker (optional)
 - Visual Studio 2022 or VS Code
 
-## ?? Getting Started
+## 🚀 Getting Started
 
 ### 1. Clone the Repository
 ```bash
@@ -91,7 +91,7 @@ docker-compose up -d
 - **API Base URL**: `https://localhost:5001`
 - **Swagger Documentation**: `https://localhost:5001/swagger`
 
-## ?? API Endpoints
+## 📡 API Endpoints
 
 ### Command Endpoints
 - `POST /api/Command/Execute/{moduleName}` - Execute business commands
@@ -108,7 +108,7 @@ docker-compose up -d
 ### Public Endpoints
 - Various public endpoints for unauthenticated access
 
-## ?? Configuration
+## ⚙️ Configuration
 
 ### Environment Variables
 - `ConnectionStrings:Postgres` - PostgreSQL connection string
@@ -121,7 +121,7 @@ The application uses .NET User Secrets for sensitive configuration:
 dotnet user-secrets set "ConnectionStrings:Postgres" "your-connection-string"
 ```
 
-## ??? Modules
+## 🧩 Modules
 
 ### Admin Module
 - User management
@@ -136,43 +136,43 @@ dotnet user-secrets set "ConnectionStrings:Postgres" "your-connection-string"
 - Real-time messaging
 - Communication features
 
-## ?? Security
+## 🔒 Security
 
 - **JWT Authentication** - Token-based authentication
 - **Role-based Authorization** - Granular access control
 - **CORS Configuration** - Cross-origin request handling
 - **Input Validation** - FluentValidation for all inputs
 
-## ?? Database
+## 🗄️ Database
 
 - **Provider**: PostgreSQL
 - **ORM**: Entity Framework Core
 - **Migrations**: Code-first approach
 - **Naming Convention**: Snake case
 
-## ?? Docker Support
+## 🐳 Docker Support
 
 The application includes Docker support with:
 - Multi-stage Dockerfile
 - Docker Compose configuration
 - Linux container support
 
-## ?? Testing
+## 🧪 Testing
 
 (Testing framework to be implemented)
 
-## ?? Contributing
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
 
-## ?? License
+## 📄 License
 
 [License information to be added]
 
-## ?? Support
+## 💬 Support
 
 For issues and questions, please create an issue in the repository.
 

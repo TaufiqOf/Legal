@@ -8,6 +8,8 @@
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>mneplatfrom.api.webapi</DockerServiceName>
+    <!-- Force clean builds to avoid cached references -->
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="stylecop.json" />

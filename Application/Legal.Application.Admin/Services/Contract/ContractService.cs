@@ -25,9 +25,9 @@ public class ContractService : IContractService
         return true;
     }
 
-    public async Task<ContractDto> Get(ContractDto contract, CancellationToken cancellationToken)
+    public async Task<ContractDto> Get(string id, CancellationToken cancellationToken)
     {
-        var existingContract = await Repository.Get(contract.Id, cancellationToken);
+        var existingContract = await Repository.Get(id, cancellationToken);
         return Mapper.Map<ContractDto>(existingContract);
     }
 

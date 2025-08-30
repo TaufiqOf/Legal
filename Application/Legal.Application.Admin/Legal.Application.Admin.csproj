@@ -37,7 +37,6 @@
 
     <ItemGroup>
       <Folder Include="Migrations\" />
-      <Folder Include="QueryHandlers\" />
       <Folder Include="Services\ApplicationServices\" />
       <Folder Include="SqlModel\" />
     </ItemGroup>

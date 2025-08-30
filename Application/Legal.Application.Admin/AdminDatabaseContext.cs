@@ -30,8 +30,6 @@ public class AdminDatabaseContext : ADatabaseContext
 
     public DbSet<User> Owners { get; set; } = null!;
     
-    public DbSet<ContractDto> Contracts { get; set; } = null!;
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

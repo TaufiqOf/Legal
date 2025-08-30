@@ -19,23 +19,24 @@ services:
       - legal-network
 
   Legal.service.migration:
-    image: ${DOCKER_REGISTRY-}infrastreamplannerservicemigration
-    command: >
-      dotnet /app/MNEPlatfrom.MigrationService.dll
-      --data-db "${DB_CONNECTION_STRING}"
-      --context-number -1
-      --update-database y
+    image: ${DOCKER_REGISTRY-}migration
+    # Rely on ENTRYPOINT and environment fallback logic (no CLI args required)
+    environment:
+      - ConnectionStrings__Postgres=Host=postgres:5432;Database=legaldb;Username=legaluser;Password=legalpass
+      - MIGRATION_AUTO_RUN=y   # triggers automatic --update-database=y with ContextNumber=-1
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - legal-network
   
   Legal.api.webapi:
     user: root
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_HTTP_PORTS=5020
-      - ConnectionStrings__Postgres=${DB_CONNECTION_STRING}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=4020
+      - ConnectionStrings__Postgres=Host=postgres:5432;Database=legaldb;Username=legaluser;Password=legalpass
     volumes:
       - ${STORAGE_PATH}:/app/uploads:rw
     ports:

@@ -1,39 +1,60 @@
-﻿using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 
-namespace Legel.MigrationService
+namespace Legal.MigrationService;
+
+public class Configuration
 {
-    public class Configuration
+    private IConfigurationRoot _configuration { get; set; }
+
+    private readonly Options? _options;
+
+    public string ConString { get; private set; }
+
+    public Configuration(Options? options)
     {
-        private IConfigurationRoot _configuration { get; set; }
+        _options = options;
+        _configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddUserSecrets(Assembly.GetExecutingAssembly(), optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables() // allow Docker env overrides (e.g. ConnectionStrings__Postgres)
+            .Build();
 
-        private readonly Options? _options;
+        ConString = ResolveConnectionString();
+    }
 
-        public string ConString { get; private set; }
-
-        public Configuration(Options? options)
+    private string ResolveConnectionString()
+    {
+        // 1. command line override
+        if (!string.IsNullOrWhiteSpace(_options?.StreamDataConnection))
         {
-            _options = options;
-            _configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .AddUserSecrets(Assembly.GetExecutingAssembly(), optional: true, reloadOnChange: true)
-                .Build();
-
-            ConString = GetConStrings() ?? string.Empty;
+            return _options.StreamDataConnection.Trim();
         }
 
-        private string GetConStrings()
+        // 2. environment variable (standard ASP.NET style)
+        var envConn = Environment.GetEnvironmentVariable("ConnectionStrings__Postgres");
+        if (!string.IsNullOrWhiteSpace(envConn))
         {
-            var connectionString = _configuration.GetConnectionString("Postgres") ?? string.Empty;
-
-            if (_options != null)
-            {
-                if (!string.IsNullOrEmpty(_options.StreamDataConnection))
-                    connectionString = _options.StreamDataConnection;
-            }
-
-            return connectionString ?? string.Empty;
+            return envConn.Trim();
         }
+
+        // 3. legacy/custom env fallbacks
+        var customEnv = Environment.GetEnvironmentVariable("DATA_DB")
+                         ?? Environment.GetEnvironmentVariable("POSTGRES_CONNECTION")
+                         ?? Environment.GetEnvironmentVariable("POSTGRES_CONN");
+        if (!string.IsNullOrWhiteSpace(customEnv))
+        {
+            return customEnv.Trim();
+        }
+
+        // 4. appsettings.json
+        var appsettingsConn = _configuration.GetConnectionString("Postgres");
+        if (!string.IsNullOrWhiteSpace(appsettingsConn) && appsettingsConn != "*")
+        {
+            return appsettingsConn.Trim();
+        }
+
+        return string.Empty;
     }
 }

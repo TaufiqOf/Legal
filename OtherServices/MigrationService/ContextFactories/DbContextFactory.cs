@@ -1,8 +1,10 @@
-﻿using Legal.Service.Infrastructure.Model;
+﻿using Legal.MigrationService;
+using Legal.Service.Infrastructure.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Diagnostics; // added for warning suppression
 
-namespace Legel.MigrationService.ContextFactories;
+namespace Legal.MigrationService.ContextFactories;
 
 public class DbContextFactory<T> : IDesignTimeDbContextFactory<T> where T : ADatabaseContext
 {
@@ -21,19 +23,20 @@ public class DbContextFactory<T> : IDesignTimeDbContextFactory<T> where T : ADat
     public T CreateDbContext(string[] args)
     {
         var connectionString = _configuration.ConString;
-        var builder = new DbContextOptionsBuilder<T>();
 
-        T? aDatabaseContext = (T)Activator.CreateInstance(typeof(T));
+        // Temporary instance to get schema name
+        T? tempContext = (T)Activator.CreateInstance(typeof(T));
+        var schema = tempContext.SchemaName();
 
-        var options = new DbContextOptionsBuilder<T>()
+        var optionsBuilder = new DbContextOptionsBuilder<T>()
             .UseNpgsql(connectionString, npgSqlOptions =>
             {
                 npgSqlOptions.MigrationsAssembly(typeof(T).Assembly.FullName);
-                npgSqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", aDatabaseContext.SchemaName());
-            }).Options;
+                npgSqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", schema);
+            })
+            // Suppress pending model changes warning (EF would otherwise throw in your scenario)
+            .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
 
-        T? fDatabaseContext = (T)Activator.CreateInstance(typeof(T), options);
-
-        return fDatabaseContext;
+        return (T)Activator.CreateInstance(typeof(T), optionsBuilder.Options)!;
     }
 }
